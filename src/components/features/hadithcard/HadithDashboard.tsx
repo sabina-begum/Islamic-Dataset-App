@@ -5,6 +5,7 @@ import { useHadithData } from "../../../hooks/useHadithData";
 import { scrollToTop } from "../../../utils/scrollUtils";
 import Masonry from "react-masonry-css";
 import type { HadithEntry } from "../../../types/Types";
+import { SanitizedInput } from "../../common/SanitizedInput";
 
 interface HadithDashboardProps {
   onFavorite?: (hadith: HadithEntry) => void;
@@ -74,7 +75,8 @@ export function HadithDashboard({
           Sahih Bukhari and Muslim Hadith Collection
         </h2>
         <p className="text-lg text-stone-600 dark:text-stone-400">
-          Explore the authentic sayings and actions of Prophet Muhammad (ﷺ)
+          Explore the sayings and actions of Prophet Muhammad (ﷺ) from hadith
+          collections
         </p>
       </div>
 
@@ -110,7 +112,10 @@ export function HadithDashboard({
       <div className="bg-white dark:bg-stone-800 rounded-xl p-6 shadow-lg border border-stone-200 dark:border-stone-700">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           {/* Search */}
-          <form onSubmit={handleSearch} className="sm:col-span-2 lg:col-span-2">
+          <form
+            onSubmit={handleSearch}
+            className="sm:col-span-2 lg:col-span-2 w-full"
+          >
             <div className="flex flex-col gap-2">
               <label
                 htmlFor="hadith-search"
@@ -118,19 +123,25 @@ export function HadithDashboard({
               >
                 Search:
               </label>
-              <div className="flex">
-                <input
-                  type="text"
-                  id="hadith-search"
-                  name="hadith-search"
-                  placeholder="Search through hadith content..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="flex-1 px-3 sm:px-4 py-2 border border-stone-300 dark:border-stone-600 rounded-l-lg bg-white dark:bg-stone-700 text-stone-900 dark:text-stone-100 focus:ring-2 focus:ring-stone-500 focus:border-transparent text-sm sm:text-base"
-                />
+              <div className="flex items-stretch">
+                <div className="flex-1 flex">
+                  <SanitizedInput
+                    type="text"
+                    id="hadith-search"
+                    name="hadith-search"
+                    placeholder="Search through hadith content..."
+                    sanitizeOptions={{
+                      sanitizeType: "islamic",
+                      validateIslamic: true,
+                    }}
+                    onValueChange={setSearchTerm}
+                    className="!rounded-l-lg !rounded-r-none !border-r-0 !focus:ring-stone-500 !border-stone-300 dark:!border-stone-600 !bg-white dark:!bg-stone-700 !text-stone-900 dark:!text-stone-100 !h-full !flex-1 !px-3 !py-2"
+                    showErrors={false}
+                  />
+                </div>
                 <button
                   type="submit"
-                  className="px-3 sm:px-4 py-2 bg-stone-600 text-white rounded-r-lg hover:bg-purple-700 transition-colors text-sm sm:text-base bg-purple-500 dark:bg-purple-700 dark:hover:bg-purple-800"
+                  className="px-3 sm:px-4 py-2 bg-stone-500 dark:bg-purple-700 text-white rounded-r-lg hover:bg-purple-700 dark:hover:bg-purple-800 transition-colors text-sm sm:text-base font-medium border border-l-0 border-stone-300 dark:border-stone-600 flex items-center justify-center min-w-fit whitespace-nowrap"
                 >
                   Search
                 </button>
@@ -197,8 +208,11 @@ export function HadithDashboard({
         <Masonry
           breakpointCols={{
             default: 3,
+            1400: 3,
             1200: 2,
+            900: 2,
             768: 1,
+            600: 1,
           }}
           className="flex w-full"
           columnClassName="bg-clip-padding pr-2 sm:pr-4"
@@ -208,7 +222,7 @@ export function HadithDashboard({
             <div key={index} className="mb-4" dir="ltr">
               <HadithCard
                 hadith={hadith}
-                index={(currentPage - 1) * 20 + index}
+                index={(currentPage - 1) * 21 + index}
                 onFavorite={onFavorite}
                 isFavorite={isFavorite}
               />

@@ -30,7 +30,7 @@ export function useProgressiveLoading<T>(
   });
 
   const currentIndex = useRef(0);
-  const timeoutRef = useRef<NodeJS.Timeout>();
+  const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
 
   // Load next chunk of data
   const loadNextChunk = useCallback(async () => {

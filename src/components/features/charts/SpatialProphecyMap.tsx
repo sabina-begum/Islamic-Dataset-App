@@ -17,90 +17,98 @@ export const SpatialProphecyMap: React.FC<SpatialProphecyMapProps> = ({
   data,
   isActive = false,
 }) => {
-  // Filter data for geographic distribution
-  const geographicData = data.filter(
-    (item) =>
-      item.type === "prophecy" ||
-      item.type === "scientific" ||
-      item.type === "health-science" ||
-      item.type === "qadr"
-  );
+  // Include ALL data types, not just specific ones
+  const allData = data;
 
-  // Define geographic locations and their associated data
+  // Define comprehensive geographic locations and their associated data
   const locations: LocationData[] = [
     {
       id: "middle-east",
       label: "Middle East",
-      value: geographicData.filter(
+      value: allData.filter(
         (item) =>
           item.title.toLowerCase().includes("palestine") ||
           item.title.toLowerCase().includes("jerusalem") ||
           item.title.toLowerCase().includes("israel") ||
           item.title.toLowerCase().includes("mecca") ||
-          item.title.toLowerCase().includes("medina")
+          item.title.toLowerCase().includes("medina") ||
+          item.title.toLowerCase().includes("yemen") ||
+          item.title.toLowerCase().includes("aden")
       ).length,
-      prophecies: geographicData
+      prophecies: allData
         .filter(
           (item) =>
             item.title.toLowerCase().includes("palestine") ||
             item.title.toLowerCase().includes("jerusalem") ||
             item.title.toLowerCase().includes("israel") ||
             item.title.toLowerCase().includes("mecca") ||
-            item.title.toLowerCase().includes("medina")
+            item.title.toLowerCase().includes("medina") ||
+            item.title.toLowerCase().includes("yemen") ||
+            item.title.toLowerCase().includes("aden")
         )
         .map((item) => item.title),
     },
     {
       id: "global",
       label: "Global",
-      value: geographicData.filter(
+      value: allData.filter(
         (item) =>
           item.title.toLowerCase().includes("global") ||
           item.title.toLowerCase().includes("worldwide") ||
           item.title.toLowerCase().includes("environmental") ||
-          item.title.toLowerCase().includes("climate")
+          item.title.toLowerCase().includes("climate") ||
+          item.title.toLowerCase().includes("world")
       ).length,
-      prophecies: geographicData
+      prophecies: allData
         .filter(
           (item) =>
             item.title.toLowerCase().includes("global") ||
             item.title.toLowerCase().includes("worldwide") ||
             item.title.toLowerCase().includes("environmental") ||
-            item.title.toLowerCase().includes("climate")
+            item.title.toLowerCase().includes("climate") ||
+            item.title.toLowerCase().includes("world")
         )
         .map((item) => item.title),
     },
     {
       id: "cosmological",
       label: "Cosmological",
-      value: geographicData.filter(
+      value: allData.filter(
         (item) =>
           item.title.toLowerCase().includes("space") ||
           item.title.toLowerCase().includes("cosmos") ||
           item.title.toLowerCase().includes("universe") ||
-          item.title.toLowerCase().includes("iron")
+          item.title.toLowerCase().includes("iron") ||
+          item.title.toLowerCase().includes("embryo") ||
+          item.title.toLowerCase().includes("development") ||
+          item.title.toLowerCase().includes("barrier") ||
+          item.title.toLowerCase().includes("water")
       ).length,
-      prophecies: geographicData
+      prophecies: allData
         .filter(
           (item) =>
             item.title.toLowerCase().includes("space") ||
             item.title.toLowerCase().includes("cosmos") ||
             item.title.toLowerCase().includes("universe") ||
-            item.title.toLowerCase().includes("iron")
+            item.title.toLowerCase().includes("iron") ||
+            item.title.toLowerCase().includes("embryo") ||
+            item.title.toLowerCase().includes("development") ||
+            item.title.toLowerCase().includes("barrier") ||
+            item.title.toLowerCase().includes("water")
         )
         .map((item) => item.title),
     },
     {
       id: "social",
       label: "Social",
-      value: geographicData.filter(
+      value: allData.filter(
         (item) =>
           item.title.toLowerCase().includes("music") ||
           item.title.toLowerCase().includes("entertainment") ||
           item.title.toLowerCase().includes("ignorance") ||
           item.title.toLowerCase().includes("social")
       ).length,
-      prophecies: geographicData
+      prophecies: allData
         .filter(
           (item) =>
             item.title.toLowerCase().includes("music") ||
@@ -113,16 +121,17 @@ export const SpatialProphecyMap: React.FC<SpatialProphecyMapProps> = ({
     {
       id: "natural",
       label: "Natural",
-      value: geographicData.filter(
+      value: allData.filter(
         (item) =>
           item.title.toLowerCase().includes("honey") ||
           item.title.toLowerCase().includes("dates") ||
           item.title.toLowerCase().includes("barley") ||
           item.title.toLowerCase().includes("olive") ||
           item.title.toLowerCase().includes("natural") ||
-          item.title.toLowerCase().includes("food")
+          item.title.toLowerCase().includes("food") ||
+          item.title.toLowerCase().includes("nutrition")
       ).length,
-      prophecies: geographicData
+      prophecies: allData
         .filter(
           (item) =>
             item.title.toLowerCase().includes("honey") ||
@@ -130,7 +139,127 @@ export const SpatialProphecyMap: React.FC<SpatialProphecyMapProps> = ({
             item.title.toLowerCase().includes("barley") ||
             item.title.toLowerCase().includes("olive") ||
             item.title.toLowerCase().includes("natural") ||
-            item.title.toLowerCase().includes("food")
+            item.title.toLowerCase().includes("food") ||
+            item.title.toLowerCase().includes("nutrition")
+        )
+        .map((item) => item.title),
+    },
+    {
+      id: "traditional-treatments",
+      label: "Traditional Treatments",
+      value: allData.filter((item) => item.type === "traditional-treatments")
+        .length,
+      prophecies: allData
+        .filter((item) => item.type === "traditional-treatments")
+        .map((item) => item.title),
+    },
+    {
+      id: "health",
+      label: "Health & Wellness",
+      value: allData.filter((item) => item.type === "health").length,
+      prophecies: allData
+        .filter((item) => item.type === "health")
+        .map((item) => item.title),
+    },
+    {
+      id: "scientific",
+      label: "Scientific Discoveries",
+      value: allData.filter((item) => item.type === "scientific").length,
+      prophecies: allData
+        .filter((item) => item.type === "scientific")
+        .map((item) => item.title),
+    },
+    {
+      id: "prophecy",
+      label: "Prophecies",
+      value: allData.filter((item) => item.type === "prophecy").length,
+      prophecies: allData
+        .filter((item) => item.type === "prophecy")
+        .map((item) => item.title),
+    },
+    {
+      id: "other",
+      label: "Other Topics",
+      value: allData.filter(
+        (item) =>
+          !item.title.toLowerCase().includes("palestine") &&
+          !item.title.toLowerCase().includes("jerusalem") &&
+          !item.title.toLowerCase().includes("israel") &&
+          !item.title.toLowerCase().includes("mecca") &&
+          !item.title.toLowerCase().includes("medina") &&
+          !item.title.toLowerCase().includes("yemen") &&
+          !item.title.toLowerCase().includes("aden") &&
+          !item.title.toLowerCase().includes("global") &&
+          !item.title.toLowerCase().includes("worldwide") &&
+          !item.title.toLowerCase().includes("environmental") &&
+          !item.title.toLowerCase().includes("climate") &&
+          !item.title.toLowerCase().includes("world") &&
+          !item.title.toLowerCase().includes("space") &&
+          !item.title.toLowerCase().includes("cosmos") &&
+          !item.title.toLowerCase().includes("universe") &&
+          !item.title.toLowerCase().includes("iron") &&
+          !item.title.toLowerCase().includes("embryo") &&
+          !item.title.toLowerCase().includes("development") &&
+          !item.title.toLowerCase().includes("barrier") &&
+          !item.title.toLowerCase().includes("water") &&
+          !item.title.toLowerCase().includes("music") &&
+          !item.title.toLowerCase().includes("entertainment") &&
+          !item.title.toLowerCase().includes("ignorance") &&
+          !item.title.toLowerCase().includes("social") &&
+          !item.title.toLowerCase().includes("jesus") &&
+          !item.title.toLowerCase().includes("isa") &&
+          !item.title.toLowerCase().includes("honey") &&
+          !item.title.toLowerCase().includes("dates") &&
+          !item.title.toLowerCase().includes("barley") &&
+          !item.title.toLowerCase().includes("olive") &&
+          !item.title.toLowerCase().includes("natural") &&
+          !item.title.toLowerCase().includes("food") &&
+          !item.title.toLowerCase().includes("nutrition") &&
+          item.type !== "traditional-treatments" &&
+          item.type !== "health" &&
+          item.type !== "scientific" &&
+          item.type !== "prophecy"
+      ).length,
+      prophecies: allData
+        .filter(
+          (item) =>
+            !item.title.toLowerCase().includes("palestine") &&
+            !item.title.toLowerCase().includes("jerusalem") &&
+            !item.title.toLowerCase().includes("israel") &&
+            !item.title.toLowerCase().includes("mecca") &&
+            !item.title.toLowerCase().includes("medina") &&
+            !item.title.toLowerCase().includes("yemen") &&
+            !item.title.toLowerCase().includes("aden") &&
+            !item.title.toLowerCase().includes("global") &&
+            !item.title.toLowerCase().includes("worldwide") &&
+            !item.title.toLowerCase().includes("environmental") &&
+            !item.title.toLowerCase().includes("climate") &&
+            !item.title.toLowerCase().includes("world") &&
+            !item.title.toLowerCase().includes("space") &&
+            !item.title.toLowerCase().includes("cosmos") &&
+            !item.title.toLowerCase().includes("universe") &&
+            !item.title.toLowerCase().includes("iron") &&
+            !item.title.toLowerCase().includes("embryo") &&
+            !item.title.toLowerCase().includes("development") &&
+            !item.title.toLowerCase().includes("barrier") &&
+            !item.title.toLowerCase().includes("water") &&
+            !item.title.toLowerCase().includes("music") &&
+            !item.title.toLowerCase().includes("entertainment") &&
+            !item.title.toLowerCase().includes("ignorance") &&
+            !item.title.toLowerCase().includes("social") &&
+            !item.title.toLowerCase().includes("jesus") &&
+            !item.title.toLowerCase().includes("isa") &&
+            !item.title.toLowerCase().includes("honey") &&
+            !item.title.toLowerCase().includes("dates") &&
+            !item.title.toLowerCase().includes("barley") &&
+            !item.title.toLowerCase().includes("olive") &&
+            !item.title.toLowerCase().includes("natural") &&
+            !item.title.toLowerCase().includes("food") &&
+            !item.title.toLowerCase().includes("nutrition") &&
+            item.type !== "traditional-treatments" &&
+            item.type !== "health" &&
+            item.type !== "scientific" &&
+            item.type !== "prophecy"
         )
         .map((item) => item.title),
     },
@@ -140,9 +269,9 @@ export const SpatialProphecyMap: React.FC<SpatialProphecyMapProps> = ({
   const activeLocations = locations.filter((location) => location.value > 0);
 
   return (
-    <div className="w-full bg-white dark:bg-stone-800 rounded-2xl shadow-lg border border-stone-200 dark:border-stone-700 p-6">
-      <h3 className="text-lg font-bold text-green-700 dark:text-green-400 mb-6 text-center">
-        Geographic Data Distribution
+    <div className="w-full bg-white dark:bg-stone-800 rounded-xl shadow-lg p-6">
+      <h3 className="text-lg font-bold text-green-700 dark:text-green-400 mb-6">
+        Featured Geographic Data Distribution
       </h3>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -217,22 +346,22 @@ export const SpatialProphecyMap: React.FC<SpatialProphecyMapProps> = ({
       )}
 
       {isActive && (
-        <div className="mt-4 p-3 bg-stone-50 dark:bg-stone-700 rounded-lg border border-stone-200 dark:border-stone-600">
-          <h4 className="text-sm font-semibold text-stone-700 dark:text-stone-300 mb-2">
+        <div className="mt-4 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800/30">
+          <h4 className="text-sm font-semibold text-green-700 dark:text-green-400 mb-2">
             About This Chart:
           </h4>
           <ul className="text-xs text-stone-600 dark:text-stone-400 space-y-1">
             <li>
               • <strong>Middle East:</strong> Data about Palestine, Jerusalem,
-              Israel, Mecca, and Medina
+              Israel, Mecca, Medina, Yemen, and Aden
             </li>
             <li>
               • <strong>Global:</strong> Data about worldwide events,
-              environmental changes, and climate
+              environmental changes, climate, and world topics
             </li>
             <li>
               • <strong>Cosmological:</strong> Data about space, universe,
-              cosmos, and iron from space
+              cosmos, iron, embryo development, and water barriers
             </li>
             <li>
               • <strong>Social:</strong> Data about music, entertainment,
@@ -240,7 +369,27 @@ export const SpatialProphecyMap: React.FC<SpatialProphecyMapProps> = ({
             </li>
             <li>
               • <strong>Natural:</strong> Data about honey, dates, natural
-              foods, and nutrition
+              foods, nutrition, and natural resources
+            </li>
+            <li>
+              • <strong>Traditional Treatments:</strong> All traditional healing
+              practices and remedies
+            </li>
+            <li>
+              • <strong>Health & Wellness:</strong> All health-related data and
+              nutritional information
+            </li>
+            <li>
+              • <strong>Scientific Discoveries:</strong> All scientifically
+              verified facts and discoveries
+            </li>
+            <li>
+              • <strong>Prophecies:</strong> All prophetic predictions and
+              future events
+            </li>
+            <li>
+              • <strong>Other Topics:</strong> All remaining data not covered by
+              other categories
             </li>
             <li>
               • <strong>Numbers show:</strong> How many data entries belong to

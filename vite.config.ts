@@ -1,91 +1,69 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
-import path from "path";
+import { resolve } from "path";
+import { generateHeaders } from "./security-config";
+import type { Request, Response, NextFunction } from "express";
 
-// https://vitejs.dev/config/
+// Security plugin for development
+const securityHeaders = () => {
+  return {
+    name: "security-headers",
+    configureServer(server: any) {
+      server.middlewares.use(
+        (_req: Request, res: Response, next: NextFunction) => {
+          // Get security headers for development environment
+          const headers = generateHeaders("development", true);
+
+          // Apply all security headers
+          Object.entries(headers).forEach(([header, value]) => {
+            res.setHeader(header, value as string);
+          });
+
+          next();
+        }
+      );
+    },
+  };
+};
+
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), securityHeaders()],
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./src"),
+      "@": resolve(__dirname, "src"),
     },
   },
+  worker: {
+    format: "es",
+  },
+  server: {
+    port: 5173,
+    host: true,
+    // https: false, // Set to true for HTTPS in development
+  },
   build: {
-    // Increase chunk size warning limit
-    chunkSizeWarningLimit: 1000,
+    outDir: "dist",
+    sourcemap: false, // Disable source maps for security
     rollupOptions: {
       output: {
-        // Manual chunk splitting for better caching and loading
         manualChunks: {
-          // Vendor chunks
-          "react-vendor": ["react", "react-dom"],
-          "router-vendor": ["react-router-dom"],
-          "ui-vendor": ["@nivo/core", "@nivo/pie", "@nivo/bar", "@nivo/line"],
-
-          // Feature chunks - split by functionality
-          "search-core": [
-            "./src/components/features/search/AdvancedSearchDashboard.tsx",
+          vendor: ["react", "react-dom"],
+          router: ["react-router-dom"],
+          charts: [
+            "@nivo/bar",
+            "@nivo/core",
+            "@nivo/geo",
+            "@nivo/line",
+            "@nivo/pie",
           ],
-          "search-results": [
-            "./src/components/features/search/SearchResults.tsx",
-          ],
-          "search-filters": [
-            "./src/components/features/search/AdvancedFilterPanel.tsx",
-          ],
-          "charts-core": [
-            "./src/components/features/charts/ChartsDashboard.tsx",
-          ],
-          "charts-pie": [
-            "./src/components/features/charts/CategoryPieChart.tsx",
-          ],
-          "charts-status": [
-            "./src/components/features/charts/PropheticStatusChart.tsx",
-          ],
-          "charts-map": [
-            "./src/components/features/charts/SpatialProphecyMap.tsx",
-          ],
-          "auth-login": ["./src/components/features/auth/Login.tsx"],
-          "auth-signup": ["./src/components/features/auth/Signup.tsx"],
-
-          // Data chunks - split by source
-          "data-islamic": ["./src/data/islamic_data.json"],
-          "hooks-islamic": ["./src/hooks/useIslamicData.ts"],
-          "hooks-quran": ["./src/hooks/useQuranData.ts"],
-          "hooks-hadith": ["./src/hooks/useHadithData.ts"],
-        },
-        // Optimize chunk naming
-        chunkFileNames: () => `js/[name]-[hash].js`,
-        entryFileNames: "js/[name]-[hash].js",
-        assetFileNames: (assetInfo) => {
-          const info = assetInfo.name?.split(".") || [];
-          const ext = info[info.length - 1];
-          if (/\.(css)$/.test(assetInfo.name || "")) {
-            return `css/[name]-[hash].${ext}`;
-          }
-          return `assets/[name]-[hash].${ext}`;
         },
       },
     },
-    // Enable source maps for debugging
-    sourcemap: false,
-    // Minify options
-    minify: "esbuild",
+    // Security optimizations
+    minify: "terser",
   },
-  // Optimize dependencies
-  optimizeDeps: {
-    include: [
-      "react",
-      "react-dom",
-      "react-router-dom",
-      "@nivo/core",
-      "@nivo/pie",
-      "@nivo/bar",
-      "@nivo/line",
-    ],
-  },
-  // Server options for development
-  server: {
-    port: 3000,
-    open: true,
+  // Security optimizations
+  define: {
+    __DEV__: JSON.stringify(process.env.NODE_ENV === "development"),
   },
 });

@@ -113,7 +113,7 @@ function indexIslamicData(islamicData: IslamicData[]): void {
     const tokens = [
       ...tokenizeText(islamicData.title),
       ...tokenizeText(islamicData.notes),
-      ...tokenizeText(islamicData.description || ""),
+      ...tokenizeText(islamicData.title || ""),
       ...tokenizeText(islamicData.type),
       ...tokenizeText(islamicData.fulfillmentStatus || ""),
       ...tokenizeText(islamicData.prophecyCategory || ""),
@@ -180,7 +180,7 @@ export function debounceSearch<T extends (...args: unknown[]) => unknown>(
   func: T,
   delay: number
 ): DebouncedFunction<T> {
-  let timeoutId: NodeJS.Timeout;
+  let timeoutId: ReturnType<typeof setTimeout>;
 
   const debounced = (...args: Parameters<T>) => {
     clearTimeout(timeoutId);

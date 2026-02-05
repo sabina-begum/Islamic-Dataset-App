@@ -1,0 +1,131 @@
+/* Search-specific styles - Lazy loaded */
+
+/* Search container */
+.search-container {
+  background: #f9fafb;
+  border-radius: 0.5rem;
+  border: 1px solid #e5e7eb;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+[data-theme="dark"] .search-container {
+  background: #1e293b;
+  border-color: #334155;
+}
+
+/* Search input styles */
+.search-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  background: white;
+  color: #1f2937;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #059669;
+  box-shadow: 0 0 0 3px rgb(5 150 105 / 0.1);
+}
+
+[data-theme="dark"] .search-input {
+  background: #374151;
+  border-color: #6b7280;
+  color: #f3f4f6;
+}
+
+[data-theme="dark"] .search-input:focus {
+  border-color: #10b981;
+  box-shadow: 0 0 0 3px rgb(16 185 129 / 0.1);
+}
+
+/* Search filters */
+.search-filters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.filter-select {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  background: white;
+  color: #1f2937;
+  font-size: 0.875rem;
+}
+
+[data-theme="dark"] .filter-select {
+  background: #374151;
+  border-color: #6b7280;
+  color: #f3f4f6;
+}
+
+/* Search results */
+.search-results {
+  display: grid;
+  gap: 1rem;
+}
+
+.search-result-item {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  transition: box-shadow 0.15s ease-in-out;
+}
+
+.search-result-item:hover {
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+}
+
+[data-theme="dark"] .search-result-item {
+  background: #1e293b;
+  border-color: #334155;
+}
+
+/* Search highlights */
+.search-highlight {
+  background: #fef3c7;
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+  font-weight: 500;
+}
+
+[data-theme="dark"] .search-highlight {
+  background: #92400e;
+  color: #fef3c7;
+}
+
+/* Search loading states */
+.search-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 12rem;
+  background: #f9fafb;
+  border-radius: 0.5rem;
+  border: 1px solid #e5e7eb;
+}
+
+[data-theme="dark"] .search-loading {
+  background: #1e293b;
+  border-color: #334155;
+}
+
+/* Search responsive */
+@media (max-width: 640px) {
+  .search-filters {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .search-container {
+    padding: 1rem;
+  }
+}

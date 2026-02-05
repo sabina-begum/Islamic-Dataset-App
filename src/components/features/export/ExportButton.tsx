@@ -51,7 +51,10 @@ export const ExportButton: React.FC<ExportButtonProps> = ({
 
       await exportData(exportDataObj, options);
     } catch (error) {
-      console.error(t("export.failed"), error);
+      if (import.meta.env.DEV) {
+        // eslint-disable-next-line no-console
+        console.error(t("export.failed"), error);
+      }
       alert(t("export.failed"));
     } finally {
       setIsExporting(false);

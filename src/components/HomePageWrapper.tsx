@@ -34,11 +34,14 @@ export default function HomePageWrapper() {
   // Sync data with Zustand store
   useEffect(() => {
     if (optimizedData.data.length > 0) {
-      console.log(
-        "HomePageWrapper - Loading Islamic data:",
-        optimizedData.data.length,
-        "items (optimized)"
-      );
+      if (import.meta.env.DEV) {
+        // eslint-disable-next-line no-console
+        console.log(
+          "HomePageWrapper - Loading Islamic data:",
+          optimizedData.data.length,
+          "items (optimized)"
+        );
+      }
       setCards(optimizedData.data);
       setCardsLoading(false);
       setCardsError(null);
@@ -59,25 +62,37 @@ export default function HomePageWrapper() {
   // Export handlers
   const handleExportCSV = () => {
     // CSV export functionality
-    console.log(t("loading.exportCSV"));
+    if (import.meta.env.DEV) {
+      // eslint-disable-next-line no-console
+      console.log(t("loading.exportCSV"));
+    }
     setToast(t("loading.csvExported"));
   };
 
   const handleExportJSON = () => {
     // JSON export functionality
-    console.log(t("loading.exportJSON"));
+    if (import.meta.env.DEV) {
+      // eslint-disable-next-line no-console
+      console.log(t("loading.exportJSON"));
+    }
     setToast(t("loading.jsonExported"));
   };
 
   // Get unique types for filters
   const types = [...new Set(optimizedData.data.map((card) => card.type))];
-  console.log("HomePageWrapper - Islamic data:", optimizedData.data.length);
-  console.log("HomePageWrapper - Types:", types);
-  console.log("HomePageWrapper - Progress:", optimizedData.progress + "%");
-  console.log(
-    "HomePageWrapper - Worker supported:",
-    optimizedData.workerSupported
-  );
+  if (import.meta.env.DEV) {
+    // eslint-disable-next-line no-console
+    console.log("HomePageWrapper - Islamic data:", optimizedData.data.length);
+    // eslint-disable-next-line no-console
+    console.log("HomePageWrapper - Types:", types);
+    // eslint-disable-next-line no-console
+    console.log("HomePageWrapper - Progress:", optimizedData.progress + "%");
+    // eslint-disable-next-line no-console
+    console.log(
+      "HomePageWrapper - Worker supported:",
+      optimizedData.workerSupported
+    );
+  }
 
   // Calculate paginated cards based on current page
   const itemsPerPage = 9;

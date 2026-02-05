@@ -1,5 +1,6 @@
 import React, { memo, useState } from "react";
 import type { IslamicData } from "../../../types/Types";
+import { generateScholarlySummary } from "../../../utils/dataSanitizer";
 
 interface DataCardProps {
   card: IslamicData;
@@ -29,7 +30,7 @@ export const DataCard: React.FC<DataCardProps> = memo(
                   ? "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-200"
                   : card.type === "scientific"
                   ? "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-200"
-                  : card.type === "health-science"
+                  : card.type === "health"
                   ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-200"
                   : card.type === "qadr"
                   ? "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-200"
@@ -72,24 +73,15 @@ export const DataCard: React.FC<DataCardProps> = memo(
             {card.title}
           </h3>
 
-          {/* Description */}
-          {card.description && (
-            <p className="text-stone-600 dark:text-stone-400 text-sm leading-relaxed mb-4">
-              {card.description}
-            </p>
-          )}
-
           {/* Notes */}
-          {card.notes && (
-            <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800 mb-4">
-              <h4 className="text-xs font-semibold text-blue-700 dark:text-blue-300 mb-2 uppercase tracking-wide">
-                Notes
-              </h4>
-              <p className="text-sm text-blue-800 dark:text-blue-200">
-                {card.notes}
-              </p>
-            </div>
-          )}
+          <div className="mb-4 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+            <h4 className="text-sm font-semibold text-blue-800 dark:text-blue-200 mb-2">
+              Notes
+            </h4>
+            <p className="text-sm text-blue-700 dark:text-blue-300 leading-relaxed">
+              {card.notes || generateScholarlySummary(card)}
+            </p>
+          </div>
 
           {/* Status Information */}
           {card.status && (
@@ -107,15 +99,18 @@ export const DataCard: React.FC<DataCardProps> = memo(
                     </span>
                     <span
                       className={`px-2 py-1 rounded-full text-xs font-medium ${
-                        card.status === "Fulfilled"
-                          ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-200"
-                          : card.status === "Proven"
+                        card.status === "Fulfilled Prophecy"
+                          ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-200"
+                          : card.status === "Documented"
                           ? "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-200"
+                          : card.status === "supported by evidence"
+                          ? "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-200"
+                          : card.status === "Future Event"
+                          ? "bg-violet-100 text-violet-800 dark:bg-violet-900/30 dark:text-violet-200"
+                          : card.status === "Ongoing Research"
+                          ? "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-200"
                           : card.status === "In Progress"
                           ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-200"
-                          : card.status === "Yet to Happen" ||
-                            card.status === "Pending"
-                          ? "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-200"
                           : "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200"
                       }`}
                     >

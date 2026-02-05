@@ -23,7 +23,7 @@ function buildSearchIndex(data: Record<string, unknown>[]): SearchIndex {
   data.forEach((item, idx) => {
     const searchableText = [
       (item.title as string) || "",
-      (item.description as string) || "",
+      (item.title as string) || "",
       (item.notes as string) || "",
       (item.type as string) || "",
       (item.status as string) || "",
@@ -56,10 +56,7 @@ function buildSearchIndex(data: Record<string, unknown>[]): SearchIndex {
 }
 
 // Perform search using the index
-function performSearch(
-  query: string,
-  _filters: Record<string, unknown>
-): { id: string; score: number }[] {
+function performSearch(query: string): { id: string; score: number }[] {
   const queryLower = query.toLowerCase();
   const results: { [key: string]: number } = {};
 
@@ -90,7 +87,7 @@ function filterData(
   let filtered = [...data];
 
   if (filters.searchTerm) {
-    const searchResults = performSearch(filters.searchTerm as string, filters);
+    const searchResults = performSearch(filters.searchTerm as string);
     const resultIds = new Set(searchResults.map((r) => r.id));
     filtered = filtered.filter((item) => resultIds.has(item.id as string));
   }
@@ -148,10 +145,7 @@ ctx.addEventListener(
         count: Object.keys(searchIndex).length,
       });
     } else if (message.type === "SEARCH") {
-      const searchResults = performSearch(
-        message.query as string,
-        message.filters as Record<string, unknown>
-      );
+      const searchResults = performSearch(message.query as string);
       ctx.postMessage({ type: "SEARCH_RESULTS", results: searchResults });
     } else if (message.type === "FILTER") {
       const filteredData = filterData(
@@ -167,7 +161,10 @@ ctx.addEventListener(
       );
       ctx.postMessage({ type: "SORTED_DATA", data: sortedData });
     } else {
-      console.warn("Unknown message type:", message.type);
+      if (import.meta.env.DEV) {
+        // eslint-disable-next-line no-console
+        console.warn("Unknown message type:", message.type);
+      }
     }
   }
 );

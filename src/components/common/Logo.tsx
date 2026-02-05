@@ -1,4 +1,5 @@
 import bookImage from "../../assets/5179ed07851a80de976e57843ec0f946.png";
+import React from "react";
 
 interface LogoProps {
   className?: string;
@@ -42,11 +43,11 @@ export function Logo({ className = "", showText = true }: LogoProps) {
       {/* App Name */}
       {showText && (
         <div className="flex flex-col">
-          <span className="text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-green-600 via-emerald-500 to-green-700 dark:from-green-400 dark:via-emerald-300 dark:to-green-500 leading-tight tracking-wide drop-shadow-sm">
+          <span className="text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-green-600 via-green-500 to-green-700 dark:from-emerald-400 dark:via-emerald-500 dark:to-emerald-700 leading-tight tracking-wide drop-shadow-sm">
             Reflect
           </span>
           <span className="text-xs font-medium text-stone-600 dark:text-stone-300 leading-tight tracking-wider uppercase">
-            & Implement
+            & IMPLEMENT
           </span>
         </div>
       )}

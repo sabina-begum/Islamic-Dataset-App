@@ -1,204 +1,164 @@
-# Data Integration & Enrichment System
+# Data Integration & Management System
 
 ## Overview
 
-The Quranic Signs & Guidance app now features a comprehensive data integration and enrichment system that processes Quran and Hadith datasets to extract miracles, prophecies, and create enriched data. This system makes the app "fully complete and data rich" by integrating multiple data sources and providing advanced analytics.
+The Islamic Dataset Interface features a comprehensive data management system that integrates Islamic data, Quran verses, and Hadith collections. This system provides advanced search, filtering, and data presentation capabilities while maintaining educational objectivity.
 
 ## 🎯 What This System Does
 
-### 1. **Quran Dataset Processing**
+### 1. **Islamic Data Management**
 
-- Loads and parses the complete Quran dataset (6,236 verses)
-- Extracts numerical patterns and word frequency analysis
-- Identifies mathematical miracles (19-multiples, balanced word pairs)
-- Analyzes structural patterns (Meccan vs Medinan verses)
-- Categorizes linguistic miracles and eloquence patterns
+- Loads and processes Islamic data including prophecies, scientific facts, and health practices
+- Provides categorization by type (prophecy, scientific, health, traditional-treatments)
+- Implements source attribution and verification methods
+- Maintains educational objectivity in data presentation
 
-### 2. **Hadith Dataset Processing**
+### 2. **Quran Integration**
 
-- Processes Sahih Bukhari collection (7,563+ Hadiths)
-- Identifies prophetic statements using keyword detection
-- Extracts narrator chains and reliability scores
-- Categorizes Hadiths by theme and content
-- Maps prophecies to their fulfillment status
+- Integrates complete Quran dataset with search capabilities
+- Provides filtering by Surah, verse range, and place of revelation
+- Implements favorites system for Quran verses
+- Maintains proper source attribution
 
-### 3. **Data Enrichment**
+### 3. **Hadith Collections**
 
-- Cross-references Quran and Hadith data
-- Adds contextual information to existing miracles
-- Creates enhanced categorization systems
-- Provides historical context and academic sources
-- Generates comprehensive statistics and analytics
+- Integrates Sahih Bukhari and Muslim collections
+- Provides advanced search and filtering capabilities
+- Implements favorites system for Hadith entries
+- Maintains educational presentation standards
 
 ## 📁 File Structure
 
 ```
 src/
-├── utils/
-│   ├── dataProcessor.ts          # Core data processing logic
-│   └── dataEnrichment.ts         # Data enrichment and cross-referencing
 ├── components/
-│   ├── DataIntegration.tsx       # Data loading and processing UI
-│   └── EnhancedDataDashboard.tsx # Analytics and statistics dashboard
-├── pages/
-│   └── DataIntegrationPage.tsx   # Main integration page with tabs
-└── data/
-    ├── The Quran Dataset.csv     # Complete Quran dataset
-    ├── Sahih Bukhari Full Text.txt # Complete Hadith collection
-    └── quranic_miracles.json     # Existing miracles database
+│   ├── HomePage.tsx              # Main data view component
+│   ├── HomePageWrapper.tsx       # Data management wrapper
+│   └── features/
+│       ├── search/
+│       │   └── AdvancedSearchDashboard.tsx  # Advanced search interface
+│       ├── charts/
+│       │   └── ChartsDashboard.tsx          # Data visualization
+│       ├── qurancard/
+│       │   └── QuranDashboard.tsx           # Quran browser
+│       └── hadithcard/
+│           └── HadithDashboard.tsx          # Hadith browser
+├── hooks/
+│   ├── useIslamicData.ts         # Islamic data management
+│   ├── useQuranData.ts           # Quran data integration
+│   └── useHadithData.ts          # Hadith data integration
+├── data/
+│   ├── islamic-data.json         # Islamic data collection
+│   ├── quran-data.json           # Quran dataset
+│   └── hadith-data.json          # Hadith collections
+└── utils/
+    └── dataSanitizer.ts          # Data sanitization utilities
 ```
 
 ## 🚀 How to Use
 
-### Step 1: Access the Data Integration Center
+### Step 1: Access the Main Interface
 
-1. Navigate to the app
-2. Click on "Data Integration" in the navbar
-3. You'll see three main tabs:
-   - **Data Integration**: Process new datasets
-   - **Data Enrichment**: Enhance existing data
-   - **Analytics Dashboard**: View comprehensive statistics
+1. Navigate to the app homepage
+2. Use the tab navigation to access different data types:
+   - **Data Tab**: View Islamic data with filtering and search
+   - **Search Tab**: Advanced cross-reference search
+   - **Charts Tab**: Data visualization and analytics
+   - **Quran Tab**: Quran browser with search capabilities
+   - **Hadith Tab**: Hadith collections with advanced search
 
-### Step 2: Process Datasets
+### Step 2: Search and Filter Data
 
-1. In the "Data Integration" tab, the system automatically:
-   - Loads the Quran CSV dataset
-   - Processes the Hadith text file
-   - Extracts miracles and prophecies
-   - Displays real-time progress and statistics
+1. Use the search functionality to find specific content
+2. Apply filters by type, category, or other criteria
+3. Use advanced search for cross-reference capabilities
+4. Save interesting findings to favorites
 
-### Step 3: Enrich Data
+### Step 3: Export Data
 
-1. Switch to the "Data Enrichment" tab
-2. Click "Start Enrichment" to:
-   - Cross-reference Quran and Hadith data
-   - Add contextual information
-   - Create enhanced categories
-   - Generate comprehensive analytics
-
-### Step 4: Export Results
-
-1. After enrichment, click "Export Enriched Data"
-2. Download the enhanced JSON file
-3. Use this data to update your main database
+1. Use the export functionality to download data
+2. Choose between CSV and JSON formats
+3. Export filtered results or complete datasets
 
 ## 📊 What You Get
 
-### Enhanced Miracle Data
+### Islamic Data Management
 
-Each enriched miracle now includes:
+The system provides comprehensive data management for:
 
-```typescript
-interface EnrichedMiracle {
-  // Original miracle data
-  type: string;
-  title: string;
-  notes: string;
+- **Islamic Data**: Prophecies, scientific facts, health practices, traditional treatments
+- **Quran Integration**: Complete Quran with search, filtering, and favorites
+- **Hadith Collections**: Sahih Bukhari and Muslim with advanced search
+- **Cross-Reference Search**: Unified search across all data types
 
-  // Quranic context
-  quranicContext?: {
-    surah: string;
-    ayah: number;
-    revelationPlace: string;
-    wordCount: number;
-    relatedVerses: string[];
-  };
+### Data Features
 
-  // Hadith context
-  hadithContext?: {
-    book: string;
-    chapter: string;
-    narratorChain: string;
-    reliabilityScore: number;
-    relatedHadiths: string[];
-  };
-
-  // Cross-references
-  crossReferences?: {
-    quranVerses: string[];
-    hadithReferences: string[];
-    academicSources: string[];
-    historicalContext: string;
-  };
-
-  // Enhanced categorization
-  enhancedCategories?: {
-    primary: string;
-    secondary: string[];
-    themes: string[];
-    keywords: string[];
-  };
-}
-```
-
-### Comprehensive Statistics
-
-- **Quran Analysis**: 6,236 verses, 114 surahs, Meccan/Medinan distribution
-- **Hadith Analysis**: 7,563+ Hadiths, reliability scores, thematic categorization
-- **Miracle Extraction**: Numerical patterns, prophecies, linguistic miracles
-- **Data Quality**: Completeness metrics, cross-reference validation
+- **Advanced Filtering**: Filter by type, category, and other criteria
+- **Search Capabilities**: Full-text search with relevance scoring
+- **Favorites System**: Save and manage content across all data types
+- **Export Functionality**: Download data in CSV or JSON formats
+- **Educational Objectivity**: Maintains academic presentation standards
 
 ## 🔍 Advanced Features
 
-### 1. **Pattern Recognition**
+### 1. **Advanced Search**
 
-- **Word Frequency Analysis**: Identifies balanced word pairs (Life/Death, Heaven/Hell, etc.)
-- **Mathematical Patterns**: 19-multiple patterns, numerical sequences
-- **Structural Analysis**: Meccan vs Medinan verse patterns
-- **Linguistic Miracles**: Arabic language patterns and eloquence
+- **Unified Search**: Search across Islamic data, Quran, and Hadith simultaneously
+- **Relevance Scoring**: Intelligent search result ranking
+- **Filter Combinations**: Complex filtering across multiple criteria
+- **Search History**: Track and manage search queries
 
-### 2. **Prophecy Detection**
+### 2. **Data Visualization**
 
-- **Keyword Scanning**: Identifies prophetic statements using Arabic keywords
-- **Temporal Analysis**: Maps prophecies to historical events
-- **Fulfillment Tracking**: Categorizes prophecies by fulfillment status
-- **Reliability Assessment**: Evaluates Hadith authenticity and narrator chains
+- **Interactive Charts**: Visual representation of data distribution
+- **Category Analysis**: Breakdown by type, theme, and other criteria
+- **Trend Analysis**: Historical and thematic patterns
+- **Export Capabilities**: Download charts and statistics
 
-### 3. **Cross-Referencing**
+### 3. **Educational Features**
 
-- **Quran-Hadith Links**: Connects prophecies to relevant verses
-- **Academic Sources**: Links to scholarly references and studies
-- **Historical Context**: Provides temporal and geographical context
-- **Thematic Mapping**: Groups related miracles and prophecies
+- **Source Attribution**: Clear citation of sources and references
+- **Objective Presentation**: Academic rather than interpretive approach
+- **Scholar Consultation**: Guidance to consult qualified authorities
+- **Academic Standards**: Maintains scholarly presentation standards
 
-## 📈 Analytics Dashboard
+## 📈 Data Analytics
 
-The enhanced dashboard provides:
+The system provides comprehensive analytics:
 
 ### Overview Statistics
 
-- Total miracles, prophecies, and enriched records
-- Quran and Hadith processing metrics
-- Data quality and completeness indicators
+- Total Islamic data entries, Quran verses, and Hadith collections
+- Data distribution by type and category
+- Search and usage statistics
 
-### Miracle Type Distribution
+### Data Distribution Analysis
 
-- Breakdown by miracle type (pair, numerical, prophecy, etc.)
-- Fulfillment status analysis
-- Category and theme distribution
+- Breakdown by Islamic data type (prophecy, scientific, health, etc.)
+- Quran verse distribution by Surah and revelation place
+- Hadith collection analysis and categorization
 
-### Advanced Analytics
+### User Analytics
 
-- Pattern complexity assessment
-- Significance level classification
-- Cross-reference density analysis
-- Data enrichment coverage metrics
+- Search query analysis and trends
+- Favorites usage patterns
+- Export and download statistics
 
 ## 🛠️ Technical Implementation
 
-### Data Processing Pipeline
+### Data Management Pipeline
 
-1. **CSV Parsing**: Handles quoted fields and complex data structures
-2. **Text Processing**: Parses Arabic text with proper encoding
-3. **Pattern Recognition**: Uses regex and statistical analysis
-4. **Cross-Referencing**: Implements fuzzy matching and keyword detection
+1. **Data Loading**: Efficient loading of JSON datasets
+2. **Search Processing**: Fast text search with relevance scoring
+3. **Filtering**: Real-time filtering across multiple criteria
+4. **Export Generation**: CSV and JSON export functionality
 5. **Data Validation**: Ensures data integrity and consistency
 
 ### Performance Optimization
 
-- **Lazy Loading**: Processes data in chunks to handle large datasets
-- **Caching**: Stores processed results for faster subsequent access
-- **Progress Tracking**: Real-time updates during processing
+- **Lazy Loading**: Loads data on demand for better performance
+- **Caching**: Stores search results and user preferences
+- **Web Workers**: Background processing for large datasets
 - **Error Handling**: Graceful degradation and recovery
 
 ## 🎨 User Interface
@@ -207,82 +167,82 @@ The enhanced dashboard provides:
 
 - **Responsive Layout**: Works on desktop and mobile devices
 - **Dark Mode Support**: Consistent with app's design system
-- **Progress Indicators**: Real-time feedback during processing
-- **Interactive Charts**: Visual representation of statistics
+- **Interactive Charts**: Visual representation of data
+- **Accessibility**: WCAG 2.1 Level AA compliant
 
 ### User Experience
 
-- **Tabbed Interface**: Organized workflow with clear sections
-- **Toast Notifications**: Success and error feedback
-- **Export Functionality**: Easy data download and sharing
-- **Sample Previews**: Preview enriched data before export
+- **Tabbed Interface**: Organized navigation with clear sections
+- **Search and Filter**: Intuitive search and filtering capabilities
+- **Favorites System**: Easy saving and management of content
+- **Export Functionality**: Simple data download and sharing
 
 ## 🔧 Customization
 
-### Adding New Datasets
+### Adding New Data Sources
 
 1. Place new dataset files in `src/data/`
-2. Update the `DataProcessor` class to handle new formats
-3. Add appropriate parsing logic for the new data structure
-4. Update the UI to display new dataset statistics
+2. Update the corresponding hooks to handle new data formats
+3. Add appropriate search and filtering logic
+4. Update the UI components to display new data types
 
-### Extending Analysis
+### Extending Features
 
-1. Add new pattern recognition algorithms to `dataProcessor.ts`
-2. Implement new categorization logic in `dataEnrichment.ts`
-3. Create new chart components for additional analytics
-4. Update the dashboard to display new metrics
+1. Add new search capabilities to the search components
+2. Implement new chart types for additional analytics
+3. Create new filter options for enhanced data exploration
+4. Update the dashboard components to display new metrics
 
 ## 📋 Requirements
 
 ### Data Files
 
-- **Quran Dataset**: CSV format with verse-by-verse data
-- **Hadith Collection**: Text format with proper Arabic encoding
-- **Existing Miracles**: JSON format with current miracle database
+- **Islamic Data**: JSON format with categorized Islamic content
+- **Quran Dataset**: JSON format with verse-by-verse data
+- **Hadith Collections**: JSON format with Hadith collections
 
 ### Technical Requirements
 
 - **TypeScript**: Full type safety and IntelliSense support
 - **React**: Modern component-based architecture
 - **Tailwind CSS**: Consistent styling and responsive design
-- **Fetch API**: Modern data loading and processing
+- **Firebase**: Backend services for data storage and authentication
 
 ## 🚀 Getting Started
 
-1. **Ensure Data Files**: Make sure `The Quran Dataset.csv` and `Sahih Bukhari Full Text.txt` are in `src/data/`
+1. **Ensure Data Files**: Make sure all JSON data files are in `src/data/`
 2. **Start the App**: Run your development server
-3. **Navigate to Integration**: Click "Data Integration" in the navbar
-4. **Process Data**: Let the system automatically process your datasets
-5. **Enrich Data**: Run the enrichment process to create enhanced data
-6. **Export Results**: Download the enriched data for use in your app
+3. **Navigate to Homepage**: Access the main interface with tab navigation
+4. **Explore Data**: Use the different tabs to explore Islamic data, Quran, and Hadith
+5. **Search and Filter**: Use advanced search and filtering capabilities
+6. **Export Data**: Download data in your preferred format
 
-## 🎯 Expected Results
+## 🎯 Current Features
 
-After running the complete integration and enrichment process, you should have:
+The system provides:
 
-- **500+ Enriched Miracles**: Original miracles enhanced with new context
-- **100+ New Prophecies**: Extracted from Hadith collections
-- **50+ Numerical Patterns**: Mathematical miracles from Quran analysis
-- **Comprehensive Analytics**: Detailed statistics and insights
-- **Cross-Referenced Data**: Connected Quran and Hadith information
+- **Comprehensive Islamic Data**: Prophecies, scientific facts, health practices
+- **Complete Quran Integration**: Full Quran with search and filtering
+- **Hadith Collections**: Sahih Bukhari and Muslim with advanced search
+- **Advanced Analytics**: Data visualization and statistics
+- **Educational Standards**: Objective presentation with source attribution
 
-This system transforms your app from a basic miracle database into a comprehensive, data-rich platform for Quranic studies and prophetic analysis.
+This system provides a comprehensive platform for Islamic studies with educational objectivity and academic standards.
 
 ## 🔄 Maintenance
 
 ### Regular Updates
 
-- **Dataset Updates**: Replace CSV and text files with newer versions
-- **Algorithm Improvements**: Enhance pattern recognition and analysis
+- **Data Updates**: Replace JSON files with newer versions
+- **Feature Improvements**: Enhance search and filtering capabilities
 - **UI Enhancements**: Add new visualizations and analytics
-- **Performance Optimization**: Improve processing speed and efficiency
+- **Performance Optimization**: Improve search speed and efficiency
 
 ### Data Validation
 
 - **Quality Checks**: Verify data integrity and completeness
-- **Cross-Reference Validation**: Ensure accurate connections between sources
-- **Statistical Validation**: Confirm pattern recognition accuracy
+- **Search Validation**: Ensure accurate search results and relevance
+- **User Experience**: Monitor and improve user interaction
 - **User Feedback**: Incorporate user suggestions and improvements
 
-This comprehensive data integration system makes your Quranic Signs & Guidance app truly "fully complete and data rich" by providing deep insights, comprehensive analysis, and enriched content for users to explore and learn from.
+This comprehensive data management system provides a robust platform for Islamic studies with educational objectivity, advanced search capabilities, and comprehensive data integration.

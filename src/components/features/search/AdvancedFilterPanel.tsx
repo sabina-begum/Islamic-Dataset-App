@@ -279,29 +279,37 @@ export const AdvancedFilterPanel: React.FC<AdvancedFilterPanelProps> = ({
         <div className="mb-6">
           <div className="bg-stone-200 dark:bg-stone-900 rounded-xl border border-stone-200 dark:border-stone-700 overflow-hidden">
             {/* Filter Header */}
-            <div className="p-6 border-b border-stone-200 dark:border-stone-700 bg-stone-300 dark:bg-stone-800">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-1 h-8 bg-gradient-to-b from-emerald-500 to-green-600 dark:from-emerald-400 dark:to-green-500 rounded-full"></div>
-                    <h3 className="text-xl font-bold text-stone-800 dark:text-stone-200">
+            <div className="p-4 sm:p-6 border-b border-stone-200 dark:border-stone-700 bg-stone-300 dark:bg-stone-800">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-0">
+                <div className="flex items-center gap-2 sm:gap-4 flex-wrap">
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <div className="w-1 h-6 sm:h-8 bg-gradient-to-b from-emerald-500 to-green-600 dark:from-emerald-400 dark:to-green-500 rounded-full"></div>
+                    <h3 className="text-lg sm:text-xl font-bold text-stone-800 dark:text-stone-200">
                       {t("search.advanced")}
                     </h3>
                   </div>
                   {activeFilterCount > 0 && (
-                    <span className="px-2 py-1 bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-200 text-xs font-medium rounded-full">
+                    <span className="px-2 py-1 bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-200 text-xs sm:text-sm font-medium rounded-full whitespace-nowrap">
                       {activeFilterCount} {t("search.active")}
                     </span>
                   )}
                 </div>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 sm:gap-3 justify-end sm:justify-start">
+                  {activeFilterCount > 0 && (
+                    <button
+                      onClick={onClearFilters}
+                      className="px-2 sm:px-3 py-1.5 text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 text-xs sm:text-sm font-medium hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all duration-200 border border-red-200 dark:border-red-800 whitespace-nowrap"
+                    >
+                      {t("search.clearAll")}
+                    </button>
+                  )}
                   <button
                     onClick={toggleExpanded}
-                    className="p-2 text-stone-600 dark:text-stone-400 hover:text-stone-800 dark:hover:text-stone-200 hover:bg-stone-100 dark:hover:bg-stone-700 rounded-lg transition-all duration-200"
+                    className="p-1.5 sm:p-2 text-stone-600 dark:text-stone-400 hover:text-stone-800 dark:hover:text-stone-200 hover:bg-stone-100 dark:hover:bg-stone-700 rounded-lg transition-all duration-200"
                   >
                     {isExpanded ? (
                       <svg
-                        className="w-5 h-5"
+                        className="w-4 h-4 sm:w-5 sm:h-5"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -315,7 +323,7 @@ export const AdvancedFilterPanel: React.FC<AdvancedFilterPanelProps> = ({
                       </svg>
                     ) : (
                       <svg
-                        className="w-5 h-5"
+                        className="w-4 h-4 sm:w-5 sm:h-5"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -329,14 +337,6 @@ export const AdvancedFilterPanel: React.FC<AdvancedFilterPanelProps> = ({
                       </svg>
                     )}
                   </button>
-                  {activeFilterCount > 0 && (
-                    <button
-                      onClick={onClearFilters}
-                      className="px-3 py-1.5 text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 text-sm font-medium hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all duration-200 border border-red-200 dark:border-red-800"
-                    >
-                      {t("search.clearAll")}
-                    </button>
-                  )}
                 </div>
               </div>
             </div>
@@ -498,6 +498,62 @@ export const AdvancedFilterPanel: React.FC<AdvancedFilterPanelProps> = ({
                           </label>
                         ))}
                       </div>
+                    </div>
+
+                    {/* Sajdah Verses Filter */}
+                    <div>
+                      <label className="text-sm font-medium text-stone-700 dark:text-stone-300 mb-2 block">
+                        Sajdah Verses Only
+                      </label>
+                      <div className="flex items-center space-x-2">
+                        <input
+                          type="checkbox"
+                          checked={filters.quranSajdahOnly}
+                          onChange={(e) =>
+                            handleFilterChange(
+                              "quranSajdahOnly",
+                              e.target.checked
+                            )
+                          }
+                          className="rounded border-stone-300 text-green-600 focus:ring-green-500"
+                        />
+                        <span className="text-sm text-stone-600 dark:text-stone-400">
+                          Show only verses that require prostration (Sajdah)
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Quick Sajdah Preset Button */}
+                    <div>
+                      <button
+                        onClick={() => {
+                          const sajdahPreset: FilterState = {
+                            ...filters,
+                            dataSources: ["quran"],
+                            quranSajdahOnly: true,
+                            quranSurahs: [],
+                            quranVerseRange: { min: 1, max: 6236 },
+                            quranPlaceOfRevelation: [],
+                          };
+                          onFiltersChange(sajdahPreset);
+                        }}
+                        className="w-full sm:w-auto px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-lg transition-colors duration-200 flex items-center justify-center gap-2"
+                      >
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                          />
+                        </svg>
+                        Show All Sajdah Verses
+                      </button>
                     </div>
                   </div>
                 )}

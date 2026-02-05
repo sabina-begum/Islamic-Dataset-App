@@ -6,3 +6,11 @@ export { LanguageSelector } from "./LanguageSelector";
 export { default as DarkModeToggle } from "./DarkModeToggle";
 export { Logo } from "./Logo";
 export { default as Tooltip } from "./Tooltip";
+
+// Lazy loading components
+export {
+  LazyLoadingFallback,
+  MinimalLoadingFallback,
+  ChartLoadingFallback,
+  SearchLoadingFallback,
+} from "./LazyLoadingFallback";

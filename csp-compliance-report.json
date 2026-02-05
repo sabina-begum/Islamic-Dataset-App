@@ -1,0 +1,18 @@
+{
+  "timestamp": "2025-08-12T00:09:36.456Z",
+  "fileTest": {
+    "score": 2,
+    "total": 2,
+    "percentage": 100
+  },
+  "directiveTest": {
+    "score": 13,
+    "total": 13,
+    "percentage": 100
+  },
+  "overall": {
+    "score": 15,
+    "total": 15,
+    "percentage": 100
+  }
+}

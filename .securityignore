@@ -1,0 +1,14 @@
+# Security ignore file for Reflect & Implement
+# Only ignore false positives or acceptable risks
+
+# Development-only vulnerabilities (not in production)
+esbuild@*:development-only
+
+# Acceptable risks for chart libraries
+d3-color@*:acceptable-risk
+d3-interpolate@*:acceptable-risk
+d3-scale@*:acceptable-risk
+d3-scale-chromatic@*:acceptable-risk
+
+# Firebase vulnerabilities (handled by Google)
+undici@*:firebase-managed

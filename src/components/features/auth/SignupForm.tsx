@@ -110,19 +110,19 @@ export const SignupForm: React.FC<SignupFormProps> = ({
   };
 
   return (
-    <div className={`max-w-md mx-auto ${className}`}>
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-        <div className="text-center mb-6">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+    <div className={`${className}`}>
+      <div className="bg-white dark:bg-stone-900 rounded-xl shadow-lg border border-stone-200 dark:border-stone-800 p-6">
+        <div className="text-left mb-6">
+          <h2 className="text-xl text-center font-bold text-green-700 dark:text-green-400">
             {t("auth.createAccount")}
           </h2>
-          <p className="text-gray-600 dark:text-gray-400 mt-2">
+          <p className="text-stone-600 dark:text-stone-400 mt-2 text-center">
             {t("auth.joinUs")}
           </p>
         </div>
 
         {error && (
-          <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+          <div className="mb-4 p-3 bg-red-100 dark:bg-red-900/20 border border-red-400 dark:border-red-700 text-red-700 dark:text-red-300 rounded-lg">
             {error}
           </div>
         )}
@@ -131,7 +131,7 @@ export const SignupForm: React.FC<SignupFormProps> = ({
           <div>
             <label
               htmlFor="displayName"
-              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+              className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1"
             >
               {t("auth.displayName")}
             </label>
@@ -140,7 +140,7 @@ export const SignupForm: React.FC<SignupFormProps> = ({
               type="text"
               value={formData.displayName}
               onChange={(e) => handleInputChange("displayName", e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+              className="w-full px-3 py-2 border border-stone-200 dark:border-stone-700 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-stone-800 dark:text-stone-100"
               placeholder={t("auth.enterDisplayName")}
             />
           </div>
@@ -148,7 +148,7 @@ export const SignupForm: React.FC<SignupFormProps> = ({
           <div>
             <label
               htmlFor="email"
-              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+              className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1"
             >
               {t("auth.emailAddress")}
             </label>
@@ -157,7 +157,7 @@ export const SignupForm: React.FC<SignupFormProps> = ({
               type="email"
               value={formData.email}
               onChange={(e) => handleInputChange("email", e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+              className="w-full px-3 py-2 border border-stone-200 dark:border-stone-700 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-stone-800 dark:text-stone-100"
               placeholder={t("auth.enterEmail")}
               required
             />
@@ -166,7 +166,7 @@ export const SignupForm: React.FC<SignupFormProps> = ({
           <div>
             <label
               htmlFor="password"
-              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+              className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1"
             >
               {t("auth.password")}
             </label>
@@ -176,10 +176,10 @@ export const SignupForm: React.FC<SignupFormProps> = ({
                 type={showPassword ? "text" : "password"}
                 value={formData.password}
                 onChange={(e) => handleInputChange("password", e.target.value)}
-                className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white pr-10 ${
+                className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-stone-800 dark:text-stone-100 pr-10 ${
                   formData.password && !isPasswordValid
-                    ? "border-red-300"
-                    : "border-gray-300"
+                    ? "border-red-300 dark:border-red-600"
+                    : "border-stone-200 dark:border-stone-700"
                 }`}
                 placeholder={t("auth.enterPassword")}
                 required
@@ -191,7 +191,7 @@ export const SignupForm: React.FC<SignupFormProps> = ({
               >
                 {showPassword ? (
                   <svg
-                    className="h-5 w-5 text-gray-400"
+                    className="h-5 w-5 text-stone-400 dark:text-stone-500"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -205,7 +205,7 @@ export const SignupForm: React.FC<SignupFormProps> = ({
                   </svg>
                 ) : (
                   <svg
-                    className="h-5 w-5 text-gray-400"
+                    className="h-5 w-5 text-stone-400 dark:text-stone-500"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -230,7 +230,7 @@ export const SignupForm: React.FC<SignupFormProps> = ({
             {/* Password requirements */}
             {formData.password && (
               <div className="mt-2 text-sm">
-                <p className="text-gray-600 dark:text-gray-400 mb-1">
+                <p className="text-stone-600 dark:text-stone-400 mb-1">
                   {t("password.requirements")}
                 </p>
                 <ul className="space-y-1">
@@ -261,7 +261,9 @@ export const SignupForm: React.FC<SignupFormProps> = ({
                     <li
                       key={index}
                       className={`flex items-center ${
-                        req.condition ? "text-green-600" : "text-red-600"
+                        req.condition
+                          ? "text-green-600 dark:text-green-400"
+                          : "text-red-600 dark:text-red-400"
                       }`}
                     >
                       {req.condition ? (
@@ -300,7 +302,7 @@ export const SignupForm: React.FC<SignupFormProps> = ({
           <div>
             <label
               htmlFor="confirmPassword"
-              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+              className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1"
             >
               {t("auth.confirmPassword")}
             </label>
@@ -312,10 +314,10 @@ export const SignupForm: React.FC<SignupFormProps> = ({
                 onChange={(e) =>
                   handleInputChange("confirmPassword", e.target.value)
                 }
-                className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white pr-10 ${
+                className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-stone-800 dark:text-stone-100 pr-10 ${
                   formData.confirmPassword && !doPasswordsMatch
-                    ? "border-red-300"
-                    : "border-gray-300"
+                    ? "border-red-300 dark:border-red-600"
+                    : "border-stone-200 dark:border-stone-700"
                 }`}
                 placeholder={t("auth.confirmYourPassword")}
                 required
@@ -327,7 +329,7 @@ export const SignupForm: React.FC<SignupFormProps> = ({
               >
                 {showConfirmPassword ? (
                   <svg
-                    className="h-5 w-5 text-gray-400"
+                    className="h-5 w-5 text-stone-400 dark:text-stone-500"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -341,7 +343,7 @@ export const SignupForm: React.FC<SignupFormProps> = ({
                   </svg>
                 ) : (
                   <svg
-                    className="h-5 w-5 text-gray-400"
+                    className="h-5 w-5 text-stone-400 dark:text-stone-500"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -364,7 +366,7 @@ export const SignupForm: React.FC<SignupFormProps> = ({
             </div>
 
             {formData.confirmPassword && !doPasswordsMatch && (
-              <p className="mt-1 text-sm text-red-600">
+              <p className="mt-1 text-sm text-red-600 dark:text-red-400">
                 {t("auth.passwordsDoNotMatch")}
               </p>
             )}
@@ -375,20 +377,23 @@ export const SignupForm: React.FC<SignupFormProps> = ({
               id="terms"
               type="checkbox"
               required
-              className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+              className="h-4 w-4 text-green-600 focus:ring-green-500 border-stone-300 dark:border-stone-600 rounded"
             />
             <label
               htmlFor="terms"
-              className="ml-2 block text-sm text-gray-700 dark:text-gray-300"
+              className="ml-2 block text-sm text-stone-700 dark:text-stone-300"
             >
               {t("auth.agreeToTerms")}{" "}
-              <a href="/terms" className="text-green-600 hover:text-green-500">
+              <a
+                href="/terms"
+                className="text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300"
+              >
                 {t("auth.termsOfService")}
               </a>{" "}
               {t("auth.and")}{" "}
               <a
                 href="/privacy"
-                className="text-green-600 hover:text-green-500"
+                className="text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300"
               >
                 {t("auth.privacyPolicy")}
               </a>
@@ -412,13 +417,13 @@ export const SignupForm: React.FC<SignupFormProps> = ({
         </form>
 
         {onSwitchToLogin && (
-          <div className="mt-6 text-center">
-            <p className="text-sm text-gray-600 dark:text-gray-400">
+          <div className="mt-6 text-left">
+            <p className="text-sm text-stone-600 dark:text-stone-400 text-center">
               {t("auth.alreadyHaveAccount")}{" "}
               <button
                 type="button"
                 onClick={onSwitchToLogin}
-                className="font-medium text-green-600 hover:text-green-500"
+                className="font-medium text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300"
               >
                 {t("auth.signIn")}
               </button>

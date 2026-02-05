@@ -62,19 +62,19 @@ export const LoginForm: React.FC<LoginFormProps> = ({
   };
 
   return (
-    <div className={`max-w-md mx-auto ${className}`}>
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-        <div className="text-center mb-6">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+    <div className={`${className}`}>
+      <div className="bg-white dark:bg-stone-900 rounded-xl shadow-lg border border-stone-200 dark:border-stone-800 p-6">
+        <div className="text-left mb-6">
+          <h2 className="text-xl text-center font-bold text-green-700 dark:text-green-400">
             {t("auth.welcomeBack")}
           </h2>
-          <p className="text-gray-600 dark:text-gray-400 mt-2">
+          <p className="text-stone-600 dark:text-stone-400 mt-2 text-center">
             {t("auth.signInToContinue")}
           </p>
         </div>
 
         {error && (
-          <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+          <div className="mb-4 p-3 bg-red-100 dark:bg-red-900/20 border border-red-400 dark:border-red-700 text-red-700 dark:text-red-300 rounded-lg">
             {error}
           </div>
         )}
@@ -83,7 +83,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
           <div>
             <label
               htmlFor="email"
-              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+              className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1"
             >
               {t("auth.emailAddress")}
             </label>
@@ -92,7 +92,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
               type="email"
               value={formData.email}
               onChange={(e) => handleInputChange("email", e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+              className="w-full px-3 py-2 border border-stone-200 dark:border-stone-700 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-stone-800 dark:text-stone-100"
               placeholder={t("auth.enterEmail")}
               required
             />
@@ -101,7 +101,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
           <div>
             <label
               htmlFor="password"
-              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+              className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1"
             >
               {t("auth.password")}
             </label>
@@ -111,7 +111,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
                 type={showPassword ? "text" : "password"}
                 value={formData.password}
                 onChange={(e) => handleInputChange("password", e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white pr-10"
+                className="w-full px-3 py-2 border border-stone-200 dark:border-stone-700 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-stone-800 dark:text-stone-100 pr-10"
                 placeholder={t("auth.enterPassword")}
                 required
               />
@@ -122,7 +122,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
               >
                 {showPassword ? (
                   <svg
-                    className="h-5 w-5 text-gray-400"
+                    className="h-5 w-5 text-stone-400 dark:text-stone-500"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -136,7 +136,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
                   </svg>
                 ) : (
                   <svg
-                    className="h-5 w-5 text-gray-400"
+                    className="h-5 w-5 text-stone-400 dark:text-stone-500"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -164,11 +164,11 @@ export const LoginForm: React.FC<LoginFormProps> = ({
               <input
                 id="remember-me"
                 type="checkbox"
-                className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+                className="h-4 w-4 text-green-600 focus:ring-green-500 border-stone-300 dark:border-stone-600 rounded"
               />
               <label
                 htmlFor="remember-me"
-                className="ml-2 block text-sm text-gray-700 dark:text-gray-300"
+                className="ml-2 block text-sm text-stone-700 dark:text-stone-300"
               >
                 {t("auth.rememberMe")}
               </label>
@@ -177,9 +177,12 @@ export const LoginForm: React.FC<LoginFormProps> = ({
               type="button"
               onClick={() => {
                 // TODO: Implement password reset
-                console.log("Password reset requested");
+                if (import.meta.env.DEV) {
+                  // eslint-disable-next-line no-console
+                  console.log("Password reset requested");
+                }
               }}
-              className="text-sm text-green-600 hover:text-green-500"
+              className="text-sm text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300"
             >
               {t("auth.forgotPassword")}
             </button>
@@ -202,13 +205,13 @@ export const LoginForm: React.FC<LoginFormProps> = ({
         </form>
 
         {onSwitchToSignup && (
-          <div className="mt-6 text-center">
-            <p className="text-sm text-gray-600 dark:text-gray-400">
+          <div className="mt-6 text-left">
+            <p className="text-sm text-stone-600 dark:text-stone-400 text-center">
               {t("auth.dontHaveAccount")}{" "}
               <button
                 type="button"
                 onClick={onSwitchToSignup}
-                className="font-medium text-green-600 hover:text-green-500"
+                className="font-medium text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300"
               >
                 {t("auth.signUp")}
               </button>

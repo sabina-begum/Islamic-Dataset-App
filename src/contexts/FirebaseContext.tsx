@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useLanguage } from "../hooks/useContext";
 import { authService } from "../firebase/auth";
 import { firestoreService } from "../firebase/firestore";
@@ -54,7 +54,7 @@ export const FirebaseProvider: React.FC<{ children: React.ReactNode }> = ({
   });
 
   // Real-time listeners cleanup
-  const [listeners, setListeners] = useState<Array<() => void>>([]);
+  const listenersRef = useRef<Array<() => void>>([]);
 
   // Initialize Firebase
   useEffect(() => {
@@ -88,10 +88,13 @@ export const FirebaseProvider: React.FC<{ children: React.ReactNode }> = ({
             const status = await dataMigrationService.checkMigrationStatus();
             setMigrationStatus(status);
           } catch (err) {
-            console.warn(
-              "Migration check failed, continuing with local data:",
-              err
-            );
+            if (import.meta.env.DEV) {
+              // eslint-disable-next-line no-console
+              console.warn(
+                "Migration check failed, continuing with local data:",
+                err
+              );
+            }
             // Set default migration status
             setMigrationStatus({
               islamicDataCount: 0,
@@ -101,7 +104,7 @@ export const FirebaseProvider: React.FC<{ children: React.ReactNode }> = ({
             });
           }
 
-          setListeners([unsubscribeAuth]);
+          listenersRef.current = [unsubscribeAuth];
         }
       } catch (err) {
         setError(
@@ -124,7 +127,10 @@ export const FirebaseProvider: React.FC<{ children: React.ReactNode }> = ({
           const localData = await import("../data/islamic_data.json");
           setIslamicData((localData.default as unknown as IslamicData[]) || []);
         } catch (err) {
-          console.warn("Failed to load local Islamic data:", err);
+          if (import.meta.env.DEV) {
+            // eslint-disable-next-line no-console
+            console.warn("Failed to load local Islamic data:", err);
+          }
         }
         return;
       }
@@ -135,7 +141,10 @@ export const FirebaseProvider: React.FC<{ children: React.ReactNode }> = ({
         });
         setIslamicData([...(result.data || [])]);
       } catch (err) {
-        console.warn("Failed to load Islamic data (using local data):", err);
+        if (import.meta.env.DEV) {
+          // eslint-disable-next-line no-console
+          console.warn("Failed to load Islamic data (using local data):", err);
+        }
         // Don't throw error, just log it
       }
     },
@@ -151,7 +160,10 @@ export const FirebaseProvider: React.FC<{ children: React.ReactNode }> = ({
           const localData = await import("../data/The Quran Dataset.json");
           setQuranData((localData.default as unknown as QuranAyah[]) || []);
         } catch (err) {
-          console.warn("Failed to load local Quran data:", err);
+          if (import.meta.env.DEV) {
+            // eslint-disable-next-line no-console
+            console.warn("Failed to load local Quran data:", err);
+          }
         }
         return;
       }
@@ -160,7 +172,10 @@ export const FirebaseProvider: React.FC<{ children: React.ReactNode }> = ({
         const data = await firestoreService.getQuranData(filters);
         setQuranData(data);
       } catch (err) {
-        console.warn("Failed to load Quran data (using local data):", err);
+        if (import.meta.env.DEV) {
+          // eslint-disable-next-line no-console
+          console.warn("Failed to load Quran data (using local data):", err);
+        }
         // Don't throw error, just log it
       }
     },
@@ -176,7 +191,10 @@ export const FirebaseProvider: React.FC<{ children: React.ReactNode }> = ({
           const localData = await import("../data/Sahih Bukhari.json");
           setHadithData((localData.default as unknown as HadithEntry[]) || []);
         } catch (err) {
-          console.warn("Failed to load local Hadith data:", err);
+          if (import.meta.env.DEV) {
+            // eslint-disable-next-line no-console
+            console.warn("Failed to load local Hadith data:", err);
+          }
         }
         return;
       }
@@ -185,7 +203,10 @@ export const FirebaseProvider: React.FC<{ children: React.ReactNode }> = ({
         const data = await firestoreService.getHadithData(filters);
         setHadithData(data);
       } catch (err) {
-        console.warn("Failed to load Hadith data (using local data):", err);
+        if (import.meta.env.DEV) {
+          // eslint-disable-next-line no-console
+          console.warn("Failed to load Hadith data (using local data):", err);
+        }
         // Don't throw error, just log it
       }
     },
@@ -345,7 +366,7 @@ export const FirebaseProvider: React.FC<{ children: React.ReactNode }> = ({
         setError(message);
       }
     },
-    [isFirebaseAvailable, currentUser]
+    [isFirebaseAvailable, currentUser, t]
   );
 
   const getSearchSuggestions = useCallback(
@@ -393,7 +414,7 @@ export const FirebaseProvider: React.FC<{ children: React.ReactNode }> = ({
         throw err;
       }
     },
-    [isFirebaseAvailable, currentUser]
+    [isFirebaseAvailable, currentUser, t]
   );
 
   const removeFromFavorites = useCallback(
@@ -415,7 +436,7 @@ export const FirebaseProvider: React.FC<{ children: React.ReactNode }> = ({
         throw err;
       }
     },
-    [isFirebaseAvailable, currentUser]
+    [isFirebaseAvailable, currentUser, t]
   );
 
   const isFavorited = useCallback(
@@ -468,7 +489,7 @@ export const FirebaseProvider: React.FC<{ children: React.ReactNode }> = ({
         throw err;
       }
     },
-    [isFirebaseAvailable, loadIslamicData, loadQuranData, loadHadithData]
+    [isFirebaseAvailable, loadIslamicData, loadQuranData, loadHadithData, t]
   );
 
   // Real-time listeners
@@ -491,12 +512,12 @@ export const FirebaseProvider: React.FC<{ children: React.ReactNode }> = ({
     });
 
     newListeners.push(favoritesListener, islamicDataListener);
-    setListeners((prev) => [...prev, ...newListeners]);
+    listenersRef.current = [...listenersRef.current, ...newListeners];
   }, [isFirebaseAvailable, currentUser]);
 
   const stopRealtimeListeners = useCallback(() => {
-    listeners.forEach((unsubscribe) => unsubscribe());
-    setListeners([]);
+    listenersRef.current.forEach((unsubscribe) => unsubscribe());
+    listenersRef.current = [];
   }, []);
 
   // Start listeners when user changes

@@ -1,0 +1,23 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="256" cy="256" r="256" fill="#059669"/>
+  
+  <!-- Book icon representing Islamic knowledge -->
+  <rect x="128" y="160" width="256" height="192" rx="8" fill="white"/>
+  <rect x="144" y="176" width="224" height="160" rx="4" fill="#f0fdf4"/>
+  
+  <!-- Lines representing text -->
+  <rect x="160" y="200" width="192" height="4" rx="2" fill="#059669"/>
+  <rect x="160" y="220" width="160" height="4" rx="2" fill="#059669"/>
+  <rect x="160" y="240" width="176" height="4" rx="2" fill="#059669"/>
+  <rect x="160" y="260" width="144" height="4" rx="2" fill="#059669"/>
+  <rect x="160" y="280" width="168" height="4" rx="2" fill="#059669"/>
+  <rect x="160" y="300" width="152" height="4" rx="2" fill="#059669"/>
+  
+  <!-- Crescent moon symbol -->
+  <path d="M320 120c0 35.346-28.654 64-64 64s-64-28.654-64-64 28.654-64 64-64 64 28.654 64 64z" fill="white"/>
+  <path d="M288 120c0 17.673-14.327 32-32 32s-32-14.327-32-32 14.327-32 32-32 32 14.327 32 32z" fill="#059669"/>
+  
+  <!-- Star representing guidance -->
+  <path d="M400 200l-8 24h-24l20 16-8 24 20-16 20 16-8-24 20-16h-24l-8-24z" fill="white"/>
+</svg> 

@@ -1,9 +1,132 @@
-@import url("https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family/Noto+Naskh+Arabic:wght@400;500;600;700&display=swap");
+@import url("./styles/critical.css");
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* Arabic font utility class */
+.font-arabic {
+  font-family: "Noto Naskh Arabic", serif;
+  direction: rtl;
+}
+
+/* Custom scrollbar styles for daily selection */
+.scrollbar-thin {
+  scrollbar-width: thin;
+}
+
+.scrollbar-track-stone-200 {
+  scrollbar-color: #a8a29e #e7e5e4;
+}
+
+.dark .scrollbar-track-stone-800 {
+  scrollbar-color: #57534e #292524;
+}
+
+/* Webkit scrollbar styles */
+.scrollbar-thin::-webkit-scrollbar {
+  height: 6px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: #e7e5e4;
+  border-radius: 3px;
+}
+
+.dark .scrollbar-thin::-webkit-scrollbar-track {
+  background: #292524;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: #a8a29e;
+  border-radius: 3px;
+}
+
+.dark .scrollbar-thin::-webkit-scrollbar-thumb {
+  background: #57534e;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: #78716c;
+}
+
+.dark .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: #6b7280;
+}
+
+/* Scrollbar styles for content areas */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 3px;
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: #374151;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #9ca3af;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #6b7280;
+}
+
+/* Line clamp utilities for text truncation */
+.line-clamp-3 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+}
+
+.line-clamp-4 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
+}
+
+.line-clamp-6 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 6;
+  line-clamp: 6;
+}
+
+.line-clamp-none {
+  overflow: visible;
+  display: block;
+  -webkit-box-orient: unset;
+  -webkit-line-clamp: unset;
+  line-clamp: unset;
+}
+
+/* Smooth scrolling for all scroll containers */
+.overflow-x-auto {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Hide horizontal scrollbar for main container only */
+.overflow-x-auto::-webkit-scrollbar {
+  display: none;
+}
+
+.overflow-x-auto {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
 /* Base styles for light and dark mode */
 html {
   background-color: var(--background);
@@ -84,6 +207,15 @@ body {
 /* Custom scrollbar styles */
 ::-webkit-scrollbar {
   width: 8px;
+}
+
+/* Hide scrollbar utility class */
+.scrollbar-hide {
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  scrollbar-width: none; /* Firefox */
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
 }
 
 ::-webkit-scrollbar-track {
@@ -433,4 +565,20 @@ svg:not([role="img"]) {
 .data-loaded {
   opacity: 1;
   pointer-events: auto;
+}
+
+/* Tab content animations */
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

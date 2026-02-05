@@ -4,6 +4,7 @@ import { firestoreService } from "../../../firebase/firestore";
 import { authService } from "../../../firebase/auth";
 import type { User } from "../../../types/Types";
 import { useLanguage } from "../../../hooks/useContext";
+import { SanitizedInput } from "../../common/SanitizedInput";
 
 interface UserProfileProps {
   className?: string;
@@ -49,7 +50,11 @@ export const UserProfile: React.FC<UserProfileProps> = ({ className = "" }) => {
         }
       } catch (err) {
         setError(t("profile.failedToLoad"));
-        console.error("Profile load error:", err);
+        // Log error for debugging (in production, this would go to a logging service)
+        if (import.meta.env.DEV) {
+          // eslint-disable-next-line no-console
+          console.error("Profile load error:", err);
+        }
       } finally {
         setIsLoading(false);
       }
@@ -89,7 +94,11 @@ export const UserProfile: React.FC<UserProfileProps> = ({ className = "" }) => {
       }
     } catch (err) {
       setError(t("profile.failedToUpdate"));
-      console.error("Profile update error:", err);
+      // Log error for debugging (in production, this would go to a logging service)
+      if (import.meta.env.DEV) {
+        // eslint-disable-next-line no-console
+        console.error("Profile update error:", err);
+      }
     } finally {
       setIsLoading(false);
     }
@@ -160,20 +169,22 @@ export const UserProfile: React.FC<UserProfileProps> = ({ className = "" }) => {
             </h3>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                {t("profile.displayName")}
-              </label>
-              <input
+              <SanitizedInput
                 type="text"
-                value={formData.displayName}
-                onChange={(e) =>
+                label={t("profile.displayName")}
+                sanitizeOptions={{
+                  sanitizeType: "strict",
+                  validateIslamic: false,
+                }}
+                onValueChange={(value) =>
                   setFormData((prev) => ({
                     ...prev,
-                    displayName: e.target.value,
+                    displayName: value,
                   }))
                 }
                 disabled={!isEditing}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent disabled:bg-gray-100"
+                helperText="Enter your display name (will be sanitized for security)"
               />
             </div>
 

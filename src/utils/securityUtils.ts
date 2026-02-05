@@ -14,11 +14,12 @@ export class SecurityUtils {
 
     // Remove potentially dangerous HTML tags and attributes
     return input
-      .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
-      .replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, "")
-      .replace(/<object\b[^<]*(?:(?!<\/object>)<[^<]*)*<\/object>/gi, "")
-      .replace(/<embed\b[^<]*(?:(?!<\/embed>)<[^<]*)*<\/embed>/gi, "")
+      .replace(/<script\b[^<]*(?:(?!<\/script\s*>)<[^<]*)*<\/script\s*>/gi, "")
+      .replace(/<iframe\b[^<]*(?:(?!<\/iframe\s*>)<[^<]*)*<\/iframe\s*>/gi, "")
+      .replace(/<object\b[^<]*(?:(?!<\/object\s*>)<[^<]*)*<\/object\s*>/gi, "")
+      .replace(/<embed\b[^<]*(?:(?!<\/embed\s*>)<[^<]*)*<\/embed\s*>/gi, "")
       .replace(/javascript:/gi, "")
+      .replace(/vbscript:/gi, "")
       .replace(/on\w+\s*=/gi, "")
       .replace(/data:/gi, "")
       .trim();

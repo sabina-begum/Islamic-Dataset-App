@@ -1,11 +1,23 @@
-// Service Worker for Islamic Dataset Interface PWA
-// Provides offline functionality and caching
+// Enhanced Service Worker for Islamic Dataset Interface PWA
+// Advanced caching strategies, background sync, and performance optimization
 
-const CACHE_NAME = "islamic-dataset-v1.0.0";
-const STATIC_CACHE = "islamic-dataset-static-v1.0.0";
-const DYNAMIC_CACHE = "islamic-dataset-dynamic-v1.0.0";
+const VERSION = "v2.2.0";
+const CACHE_NAME = `islamic-dataset-${VERSION}`;
+const STATIC_CACHE = `islamic-dataset-static-${VERSION}`;
+const DYNAMIC_CACHE = `islamic-dataset-dynamic-${VERSION}`;
+const IMAGE_CACHE = `islamic-dataset-images-${VERSION}`;
+const API_CACHE = `islamic-dataset-api-${VERSION}`;
 
-// Files to cache immediately
+// Cache strategies
+const CACHE_STRATEGIES = {
+  CACHE_FIRST: "cache-first",
+  NETWORK_FIRST: "network-first",
+  STALE_WHILE_REVALIDATE: "stale-while-revalidate",
+  NETWORK_ONLY: "network-only",
+  CACHE_ONLY: "cache-only",
+};
+
+// Files to cache immediately (critical resources)
 const STATIC_FILES = [
   "/",
   "/index.html",
@@ -13,195 +25,258 @@ const STATIC_FILES = [
   "/icons/icon-192x192.png",
   "/icons/icon-512x512.png",
   "/src/assets/media-5000790.svg",
+  "/src/styles/critical.css",
+];
+
+// Route-based caching rules
+const CACHE_RULES = [
+  {
+    pattern: /\.(?:png|jpg|jpeg|svg|gif|webp)$/,
+    strategy: CACHE_STRATEGIES.CACHE_FIRST,
+    cache: IMAGE_CACHE,
+    maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+    maxEntries: 100,
+  },
+  {
+    pattern: /\.(?:js|css)$/,
+    strategy: CACHE_STRATEGIES.STALE_WHILE_REVALIDATE,
+    cache: STATIC_CACHE,
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    maxEntries: 50,
+  },
+  {
+    pattern: /\/api\//,
+    strategy: CACHE_STRATEGIES.NETWORK_FIRST,
+    cache: API_CACHE,
+    maxAge: 5 * 60 * 1000, // 5 minutes
+    maxEntries: 30,
+  },
+  {
+    pattern: /\/$/,
+    strategy: CACHE_STRATEGIES.NETWORK_FIRST,
+    cache: DYNAMIC_CACHE,
+    maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    maxEntries: 20,
+  },
 ];
 
 // Install event - cache static files
 self.addEventListener("install", (event) => {
-  console.log("Service Worker: Installing...");
+  console.log(`Service Worker ${VERSION}: Installing...`);
 
   event.waitUntil(
-    caches
-      .open(STATIC_CACHE)
-      .then((cache) => {
+    Promise.all([
+      // Cache static files
+      caches.open(STATIC_CACHE).then((cache) => {
         console.log("Service Worker: Caching static files");
         return cache.addAll(STATIC_FILES);
-      })
+      }),
+      // Initialize other caches
+      caches.open(IMAGE_CACHE),
+      caches.open(API_CACHE),
+      caches.open(DYNAMIC_CACHE),
+    ])
       .then(() => {
-        console.log("Service Worker: Static files cached");
+        console.log("Service Worker: Installation complete");
         return self.skipWaiting();
       })
       .catch((error) => {
-        console.error("Service Worker: Failed to cache static files", error);
+        console.error("Service Worker: Installation failed", error);
       })
   );
 });
 
 // Activate event - clean up old caches
 self.addEventListener("activate", (event) => {
-  console.log("Service Worker: Activating...");
+  console.log(`Service Worker ${VERSION}: Activating...`);
 
   event.waitUntil(
-    caches
-      .keys()
-      .then((cacheNames) => {
+    Promise.all([
+      // Clean up old caches
+      caches.keys().then((cacheNames) => {
         return Promise.all(
           cacheNames.map((cacheName) => {
-            if (cacheName !== STATIC_CACHE && cacheName !== DYNAMIC_CACHE) {
-              console.log("Service Worker: Deleting old cache", cacheName);
+            if (
+              cacheName.includes("islamic-dataset") &&
+              !cacheName.includes(VERSION)
+            ) {
+              console.log(`Service Worker: Deleting old cache ${cacheName}`);
               return caches.delete(cacheName);
             }
           })
         );
-      })
+      }),
+      // Claim all clients
+      self.clients.claim(),
+    ])
       .then(() => {
-        console.log("Service Worker: Activated");
-        return self.clients.claim();
+        console.log("Service Worker: Activation complete");
+      })
+      .catch((error) => {
+        console.error("Service Worker: Activation failed", error);
       })
   );
 });
 
-// Fetch event - serve from cache or network
+// Enhanced fetch event with multiple caching strategies
 self.addEventListener("fetch", (event) => {
-  const { request } = event;
-  const url = new URL(request.url);
-
   // Skip non-GET requests
-  if (request.method !== "GET") {
+  if (event.request.method !== "GET") {
     return;
   }
 
-  // Handle different types of requests
-  if (url.pathname === "/" || url.pathname === "/index.html") {
-    // Handle main page
-    event.respondWith(handleMainPage(request));
-  } else if (
-    url.pathname.startsWith("/src/") ||
-    url.pathname.startsWith("/assets/")
-  ) {
-    // Handle static assets
-    event.respondWith(handleStaticAssets(request));
-  } else if (url.pathname.includes(".json")) {
-    // Handle data files
-    event.respondWith(handleDataFiles(request));
+  // Skip chrome-extension and other non-http(s) requests
+  if (!event.request.url.startsWith("http")) {
+    return;
+  }
+
+  const url = new URL(event.request.url);
+
+  // Find matching cache rule
+  const rule = CACHE_RULES.find((rule) => rule.pattern.test(url.pathname));
+
+  if (rule) {
+    event.respondWith(handleRequest(event.request, rule));
   } else {
-    // Handle other requests
-    event.respondWith(handleOtherRequests(request));
+    // Default strategy for unmatched routes
+    event.respondWith(
+      handleRequest(event.request, {
+        strategy: CACHE_STRATEGIES.NETWORK_FIRST,
+        cache: DYNAMIC_CACHE,
+        maxAge: 24 * 60 * 60 * 1000,
+        maxEntries: 20,
+      })
+    );
   }
 });
 
-// Handle main page requests
-async function handleMainPage(request) {
-  try {
-    // Try network first
-    const networkResponse = await fetch(request);
-    if (networkResponse.ok) {
-      // Cache the response
-      const cache = await caches.open(DYNAMIC_CACHE);
-      cache.put(request, networkResponse.clone());
-      return networkResponse;
-    }
-  } catch (error) {
-    console.log("Network failed for main page, trying cache");
+// Handle requests based on caching strategy
+async function handleRequest(request, rule) {
+  switch (rule.strategy) {
+    case CACHE_STRATEGIES.CACHE_FIRST:
+      return cacheFirst(request, rule);
+    case CACHE_STRATEGIES.NETWORK_FIRST:
+      return networkFirst(request, rule);
+    case CACHE_STRATEGIES.STALE_WHILE_REVALIDATE:
+      return staleWhileRevalidate(request, rule);
+    case CACHE_STRATEGIES.NETWORK_ONLY:
+      return fetch(request);
+    case CACHE_STRATEGIES.CACHE_ONLY:
+      return caches.match(request);
+    default:
+      return networkFirst(request, rule);
   }
+}
 
-  // Fallback to cache
-  const cachedResponse = await caches.match(request);
-  if (cachedResponse) {
+// Cache First Strategy
+async function cacheFirst(request, rule) {
+  const cache = await caches.open(rule.cache);
+  const cachedResponse = await cache.match(request);
+
+  if (cachedResponse && !isExpired(cachedResponse, rule.maxAge)) {
+    console.log(`Cache hit: ${request.url}`);
     return cachedResponse;
   }
 
-  // Fallback to index.html
-  return caches.match("/index.html");
+  try {
+    console.log(`Cache miss, fetching: ${request.url}`);
+    const networkResponse = await fetch(request);
+
+    if (networkResponse.ok) {
+      // Clone before caching
+      const responseClone = networkResponse.clone();
+      cache.put(request, responseClone);
+      await cleanupCache(rule.cache, rule.maxEntries);
+    }
+
+    return networkResponse;
+  } catch (error) {
+    console.log(`Network failed, serving cached version: ${request.url}`);
+    // Return cached version even if expired
+    return cachedResponse || new Response("Offline", { status: 503 });
+  }
 }
 
-// Handle static assets
-async function handleStaticAssets(request) {
+// Network First Strategy
+async function networkFirst(request, rule) {
   try {
-    // Try cache first for static assets
-    const cachedResponse = await caches.match(request);
-    if (cachedResponse) {
-      return cachedResponse;
-    }
-  } catch (error) {
-    console.log("Cache miss for static asset");
-  }
-
-  try {
-    // Try network
+    console.log(`Network first: ${request.url}`);
     const networkResponse = await fetch(request);
-    if (networkResponse.ok) {
-      // Cache the response
-      const cache = await caches.open(DYNAMIC_CACHE);
-      cache.put(request, networkResponse.clone());
-      return networkResponse;
-    }
-  } catch (error) {
-    console.log("Network failed for static asset");
-  }
 
-  // Return a fallback response
-  return new Response("Asset not available offline", {
-    status: 404,
-    statusText: "Not Found",
-  });
+    if (networkResponse.ok) {
+      const cache = await caches.open(rule.cache);
+      const responseClone = networkResponse.clone();
+      cache.put(request, responseClone);
+      await cleanupCache(rule.cache, rule.maxEntries);
+    }
+
+    return networkResponse;
+  } catch (error) {
+    console.log(`Network failed, checking cache: ${request.url}`);
+    const cache = await caches.open(rule.cache);
+    const cachedResponse = await cache.match(request);
+
+    return cachedResponse || new Response("Offline", { status: 503 });
+  }
 }
 
-// Handle data files (JSON)
-async function handleDataFiles(request) {
-  try {
-    // Try network first for data files
-    const networkResponse = await fetch(request);
-    if (networkResponse.ok) {
-      // Cache the response
-      const cache = await caches.open(DYNAMIC_CACHE);
-      cache.put(request, networkResponse.clone());
-      return networkResponse;
-    }
-  } catch (error) {
-    console.log("Network failed for data file, trying cache");
-  }
+// Stale While Revalidate Strategy
+async function staleWhileRevalidate(request, rule) {
+  const cache = await caches.open(rule.cache);
+  const cachedResponse = await cache.match(request);
 
-  // Fallback to cache
-  const cachedResponse = await caches.match(request);
+  // Always try to fetch in background
+  const fetchPromise = fetch(request)
+    .then(async (networkResponse) => {
+      if (networkResponse.ok) {
+        const responseClone = networkResponse.clone();
+        cache.put(request, responseClone);
+        await cleanupCache(rule.cache, rule.maxEntries);
+      }
+      return networkResponse;
+    })
+    .catch(() => {
+      // Network failed, that's okay for this strategy
+    });
+
+  // Return cached version immediately if available
   if (cachedResponse) {
+    console.log(`Serving cached, updating in background: ${request.url}`);
     return cachedResponse;
   }
 
-  // Return a fallback response
-  return new Response("Data not available offline", {
-    status: 404,
-    statusText: "Not Found",
-  });
+  // No cached version, wait for network
+  console.log(`No cache, waiting for network: ${request.url}`);
+  return fetchPromise;
 }
 
-// Handle other requests
-async function handleOtherRequests(request) {
-  try {
-    // Try network first
-    const networkResponse = await fetch(request);
-    if (networkResponse.ok) {
-      return networkResponse;
-    }
-  } catch (error) {
-    console.log("Network failed for other request");
-  }
+// Check if cached response is expired
+function isExpired(response, maxAge) {
+  const dateHeader = response.headers.get("date");
+  if (!dateHeader) return false;
 
-  // Try cache
-  const cachedResponse = await caches.match(request);
-  if (cachedResponse) {
-    return cachedResponse;
-  }
+  const cacheDate = new Date(dateHeader);
+  const now = new Date();
 
-  // Return a fallback response
-  return new Response("Resource not available offline", {
-    status: 404,
-    statusText: "Not Found",
-  });
+  return now.getTime() - cacheDate.getTime() > maxAge;
 }
 
-// Background sync for offline actions
+// Clean up cache to respect maxEntries
+async function cleanupCache(cacheName, maxEntries) {
+  const cache = await caches.open(cacheName);
+  const keys = await cache.keys();
+
+  if (keys.length > maxEntries) {
+    // Delete oldest entries
+    const keysToDelete = keys.slice(0, keys.length - maxEntries);
+    await Promise.all(keysToDelete.map((key) => cache.delete(key)));
+    console.log(`Cleaned up ${keysToDelete.length} entries from ${cacheName}`);
+  }
+}
+
+// Background Sync for offline actions
 self.addEventListener("sync", (event) => {
-  console.log("Service Worker: Background sync", event.tag);
+  console.log("Background sync triggered:", event.tag);
 
   if (event.tag === "background-sync") {
     event.waitUntil(doBackgroundSync());
@@ -212,67 +287,149 @@ self.addEventListener("sync", (event) => {
 async function doBackgroundSync() {
   try {
     // Sync any pending data
-    console.log("Service Worker: Performing background sync");
+    console.log("Performing background sync...");
 
-    // You can add specific sync logic here
-    // For example, syncing search history, favorites, etc.
+    // Example: Sync favorites, user data, etc.
+    const pendingRequests = await getPendingRequests();
+
+    for (const request of pendingRequests) {
+      try {
+        await fetch(request.url, request.options);
+        await removePendingRequest(request.id);
+        console.log("Synced:", request.url);
+      } catch (error) {
+        console.error("Sync failed for:", request.url, error);
+      }
+    }
   } catch (error) {
-    console.error("Service Worker: Background sync failed", error);
+    console.error("Background sync failed:", error);
   }
 }
 
-// Push notification handling
-self.addEventListener("push", (event) => {
-  console.log("Service Worker: Push notification received");
+// Utility functions for background sync
+async function getPendingRequests() {
+  // Implementation would depend on how you store pending requests
+  // Could use IndexedDB or localStorage
+  return [];
+}
 
-  const options = {
-    body: event.data ? event.data.text() : "New update available",
-    icon: "/icons/icon-192x192.png",
-    badge: "/icons/icon-72x72.png",
-    vibrate: [100, 50, 100],
-    data: {
-      dateOfArrival: Date.now(),
-      primaryKey: 1,
-    },
-    actions: [
-      {
-        action: "explore",
-        title: "Open App",
-        icon: "/icons/icon-72x72.png",
-      },
-      {
-        action: "close",
-        title: "Close",
-        icon: "/icons/icon-72x72.png",
-      },
-    ],
-  };
-
-  event.waitUntil(
-    self.registration.showNotification("Islamic Dataset Interface", options)
-  );
-});
-
-// Notification click handling
-self.addEventListener("notificationclick", (event) => {
-  console.log("Service Worker: Notification clicked");
-
-  event.notification.close();
-
-  if (event.action === "explore") {
-    event.waitUntil(clients.openWindow("/"));
-  }
-});
+async function removePendingRequest(id) {
+  // Remove synced request from storage
+}
 
 // Message handling for communication with main thread
 self.addEventListener("message", (event) => {
-  console.log("Service Worker: Message received", event.data);
+  console.log("Service Worker received message:", event.data);
 
   if (event.data && event.data.type === "SKIP_WAITING") {
     self.skipWaiting();
   }
 
-  if (event.data && event.data.type === "GET_VERSION") {
-    event.ports[0].postMessage({ version: CACHE_NAME });
+  if (event.data && event.data.type === "GET_CACHE_STATS") {
+    getCacheStats().then((stats) => {
+      event.ports[0].postMessage(stats);
+    });
+  }
+
+  if (event.data && event.data.type === "CLEAR_CACHE") {
+    clearAllCaches().then(() => {
+      event.ports[0].postMessage({ success: true });
+    });
   }
 });
+
+// Get cache statistics
+async function getCacheStats() {
+  const cacheNames = await caches.keys();
+  const stats = {};
+
+  for (const cacheName of cacheNames) {
+    if (cacheName.includes("islamic-dataset")) {
+      const cache = await caches.open(cacheName);
+      const keys = await cache.keys();
+      stats[cacheName] = keys.length;
+    }
+  }
+
+  return stats;
+}
+
+// Clear all caches
+async function clearAllCaches() {
+  const cacheNames = await caches.keys();
+  return Promise.all(
+    cacheNames.map((cacheName) => {
+      if (cacheName.includes("islamic-dataset")) {
+        return caches.delete(cacheName);
+      }
+    })
+  );
+}
+
+// Performance monitoring
+self.addEventListener("fetch", (event) => {
+  // Performance timing
+  const startTime = performance.now();
+
+  event.respondWith(
+    handleRequest(event.request, findCacheRule(event.request)).then(
+      (response) => {
+        const endTime = performance.now();
+        const duration = endTime - startTime;
+
+        // Log slow responses
+        if (duration > 1000) {
+          console.warn(
+            `Slow response (${duration.toFixed(2)}ms):`,
+            event.request.url
+          );
+        }
+
+        return response;
+      }
+    )
+  );
+});
+
+// Find cache rule for request
+function findCacheRule(request) {
+  const url = new URL(request.url);
+  return (
+    CACHE_RULES.find((rule) => rule.pattern.test(url.pathname)) || {
+      strategy: CACHE_STRATEGIES.NETWORK_FIRST,
+      cache: DYNAMIC_CACHE,
+      maxAge: 24 * 60 * 60 * 1000,
+      maxEntries: 20,
+    }
+  );
+}
+
+// Handle SKIP_WAITING message from main thread
+self.addEventListener("message", (event) => {
+  if (event.data && event.data.type === "SKIP_WAITING") {
+    self.skipWaiting();
+  }
+});
+
+// Normal activation without aggressive claiming
+self.addEventListener("activate", (event) => {
+  event.waitUntil(
+    (async () => {
+      // Only delete caches that don't match current version
+      const cacheNames = await caches.keys();
+      await Promise.all(
+        cacheNames
+          .filter((name) => !name.includes(VERSION))
+          .map((name) => {
+            console.log("Deleting old cache:", name);
+            return caches.delete(name);
+          })
+      );
+      console.log("SW activated");
+    })()
+  );
+});
+
+console.log(
+  `Enhanced Service Worker ${VERSION} loaded with advanced caching strategies`
+);

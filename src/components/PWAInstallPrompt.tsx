@@ -75,14 +75,23 @@ export const PWAInstallPrompt: React.FC = () => {
         const { outcome } = await deferredPrompt.userChoice;
 
         if (outcome === "accepted") {
-          console.log("User accepted the install prompt");
+          if (import.meta.env.DEV) {
+            // eslint-disable-next-line no-console
+            console.log("User accepted the install prompt");
+          }
           setIsInstalled(true);
           setShowInstallPrompt(false);
         } else {
-          console.log("User dismissed the install prompt");
+          if (import.meta.env.DEV) {
+            // eslint-disable-next-line no-console
+            console.log("User dismissed the install prompt");
+          }
         }
       } catch (error) {
-        console.error("Error showing install prompt:", error);
+        if (import.meta.env.DEV) {
+          // eslint-disable-next-line no-console
+          console.error("Error showing install prompt:", error);
+        }
       }
 
       setDeferredPrompt(null);

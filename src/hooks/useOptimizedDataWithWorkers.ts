@@ -48,23 +48,47 @@ export function useOptimizedDataWithWorkers(
   });
 
   const workerRef = useRef<Worker | null>(null);
-  const searchTimeoutRef = useRef<NodeJS.Timeout>();
+  const searchTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
 
   // Initialize Web Worker
   useEffect(() => {
-    if (enableWorkers && typeof Worker !== "undefined") {
+    // Completely disable workers in build environment
+    if (import.meta.env.VITE_DISABLE_WORKERS) {
+      if (import.meta.env.DEV) {
+        // eslint-disable-next-line no-console
+        console.log("Web Workers disabled for build environment");
+      }
+      return;
+    }
+
+    const shouldUseWorkers =
+      enableWorkers &&
+      typeof Worker !== "undefined" &&
+      typeof window !== "undefined" &&
+      !import.meta.env.SSR;
+
+    if (shouldUseWorkers) {
       try {
-        workerRef.current = new Worker(
-          new URL("../workers/dataProcessor.ts", import.meta.url),
-          { type: "module" }
+        // Only create worker if not disabled
+        const workerUrl = new URL(
+          "../workers/dataProcessor.ts",
+          import.meta.url
         );
+        workerRef.current = new Worker(workerUrl, { type: "module" });
 
         workerRef.current.onmessage = (event) => {
           const { type, ...payload } = event.data;
 
           switch (type) {
             case "INDEX_BUILT":
-              console.log("Search index built with", payload.count, "entries");
+              if (import.meta.env.DEV) {
+                // eslint-disable-next-line no-console
+                console.log(
+                  "Search index built with",
+                  payload.count,
+                  "entries"
+                );
+              }
               setState((prev) => ({ ...prev, isIndexing: false }));
               break;
 
@@ -94,12 +118,20 @@ export function useOptimizedDataWithWorkers(
           }
         };
 
-        workerRef.current.onerror = (_error) => {
-          console.error("Worker error occurred");
+        workerRef.current.onerror = () => {
+          if (import.meta.env.DEV) {
+            // eslint-disable-next-line no-console
+            console.error("Worker error occurred");
+          }
           setState((prev) => ({ ...prev, error: "Worker error occurred" }));
         };
       } catch {
-        console.warn("Web Workers not supported, falling back to main thread");
+        if (import.meta.env.DEV) {
+          // eslint-disable-next-line no-console
+          console.warn(
+            "Web Workers not supported, falling back to main thread"
+          );
+        }
         setState((prev) => ({ ...prev, error: "Web Workers not supported" }));
       }
     }
@@ -163,7 +195,7 @@ export function useOptimizedDataWithWorkers(
           const results = progressiveData.data.filter((item) => {
             const searchText = [
               item.title,
-              item.description,
+              item.title,
               item.notes,
               item.type,
               item.status,

@@ -15,7 +15,7 @@ const Footer: React.FC = () => {
               <Logo />
             </div>
             <p className="text-stone-400 text-sm leading-relaxed">
-              Showcasing the miraculous signs of Allah through the Quran and Authentic Hadiths.
+              Featured Islamic Data from Quranic Verses and Authentic Hadiths.
             </p>
             <div className="flex space-x-4">
               <a
@@ -144,9 +144,9 @@ const Footer: React.FC = () => {
                   to="/"
                   className="text-stone-400 hover:text-green-400 transition-colors text-sm"
                   onClick={() => {
-                    // This will filter to show only health-science data
+                    // This will filter to show only health data
                     const event = new CustomEvent("filterByCategory", {
-                      detail: { category: "health-science" },
+                      detail: { category: "health" },
                     });
                     window.dispatchEvent(event);
                   }}
@@ -227,10 +227,10 @@ const Footer: React.FC = () => {
           {/* Mission Statement */}
           <div className="mt-6">
             <p className="text-stone-500 text-xs leading-relaxed max-w-2xl mx-auto">
-              Our mission is to showcase the miraculous signs of Allah through
-              authentic Islamic data, fostering a deeper understanding and
-              appreciation of Islamic knowledge while promoting enlightenment
-              among believers and seekers of truth.
+              Our mission is to present authentic Islamic knowledge through
+              Quranic verses, Hadith collections, and scholarly interpretations,
+              fostering educational understanding while maintaining source
+              transparency and factual presentation.
             </p>
           </div>
         </div>

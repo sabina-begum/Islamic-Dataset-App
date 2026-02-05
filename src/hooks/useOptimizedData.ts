@@ -58,14 +58,20 @@ export const useOptimizedData = () => {
     const cachedHadith = getCachedData("hadith-data");
 
     if (isCacheValid() && cachedCards && cachedQuran && cachedHadith) {
-      console.log("Using cached data");
+      if (import.meta.env.DEV) {
+        // eslint-disable-next-line no-console
+        console.log("Using cached data");
+      }
       setCards(cachedCards as IslamicData[]);
       setQuranData(cachedQuran as QuranAyah[]);
       setHadithData(cachedHadith as HadithEntry[]);
       return;
     }
 
-    console.log("Loading fresh data");
+    if (import.meta.env.DEV) {
+      // eslint-disable-next-line no-console
+      console.log("Loading fresh data");
+    }
 
     // Load Islamic data
     if (islamicData.length > 0) {
