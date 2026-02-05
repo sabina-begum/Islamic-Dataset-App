@@ -77,7 +77,10 @@ class PerformanceMonitor {
     this.startMemoryMonitoring();
     this.startCustomMetrics();
 
-    console.log("Performance monitoring started");
+    if (import.meta.env.DEV) {
+      // eslint-disable-next-line no-console
+      console.log("Performance monitoring started");
+    }
   }
 
   stop(): void {
@@ -89,7 +92,10 @@ class PerformanceMonitor {
     this.observers.forEach((observer) => observer.disconnect());
     this.observers.clear();
 
-    console.log("Performance monitoring stopped");
+    if (import.meta.env.DEV) {
+      // eslint-disable-next-line no-console
+      console.log("Performance monitoring stopped");
+    }
   }
 
   private setupObservers(): void {
@@ -107,7 +113,10 @@ class PerformanceMonitor {
         navigationObserver.observe({ entryTypes: ["navigation"] });
         this.observers.set("navigation", navigationObserver);
       } catch (error) {
-        console.warn("Navigation timing not supported:", error);
+        if (import.meta.env.DEV) {
+          // eslint-disable-next-line no-console
+          console.warn("Navigation timing not supported:", error);
+        }
       }
 
       // Paint Timing
@@ -127,7 +136,10 @@ class PerformanceMonitor {
         paintObserver.observe({ entryTypes: ["paint"] });
         this.observers.set("paint", paintObserver);
       } catch (error) {
-        console.warn("Paint timing not supported:", error);
+        if (import.meta.env.DEV) {
+          // eslint-disable-next-line no-console
+          console.warn("Paint timing not supported:", error);
+        }
       }
 
       // Layout Shifts
@@ -148,7 +160,10 @@ class PerformanceMonitor {
         layoutObserver.observe({ entryTypes: ["layout-shift"] });
         this.observers.set("layout", layoutObserver);
       } catch (error) {
-        console.warn("Layout shift timing not supported:", error);
+        if (import.meta.env.DEV) {
+          // eslint-disable-next-line no-console
+          console.warn("Layout shift timing not supported:", error);
+        }
       }
 
       // Largest Contentful Paint
@@ -168,7 +183,10 @@ class PerformanceMonitor {
         lcpObserver.observe({ entryTypes: ["largest-contentful-paint"] });
         this.observers.set("lcp", lcpObserver);
       } catch (error) {
-        console.warn("LCP timing not supported:", error);
+        if (import.meta.env.DEV) {
+          // eslint-disable-next-line no-console
+          console.warn("LCP timing not supported:", error);
+        }
       }
     }
   }
@@ -286,7 +304,10 @@ class PerformanceMonitor {
   private monitorReactRenders(): void {
     // This would be implemented with React DevTools or custom profiling
     // For now, we'll create a placeholder
-    console.log("React render monitoring enabled");
+    if (import.meta.env.DEV) {
+      // eslint-disable-next-line no-console
+      console.log("React render monitoring enabled");
+    }
   }
 
   /**
@@ -329,7 +350,10 @@ class PerformanceMonitor {
    */
   private monitorDataLoading(): void {
     // Monitor data loading times
-    console.log("Data loading monitoring enabled");
+    if (import.meta.env.DEV) {
+      // eslint-disable-next-line no-console
+      console.log("Data loading monitoring enabled");
+    }
   }
 
   /**
@@ -369,14 +393,20 @@ class PerformanceMonitor {
     metric: PerformanceMetric,
     threshold: PerformanceThreshold
   ): void {
-    console.warn(
-      `Performance threshold exceeded: ${metric.name} = ${metric.value}${metric.unit} (threshold: ${threshold.threshold}${metric.unit}, severity: ${threshold.severity})`
-    );
+    if (import.meta.env.DEV) {
+      // eslint-disable-next-line no-console
+      console.warn(
+        `Performance threshold exceeded: ${metric.name} = ${metric.value}${metric.unit} (threshold: ${threshold.threshold}${metric.unit}, severity: ${threshold.severity})`
+      );
+    }
 
     // Could send to analytics service here
     if (threshold.severity === "critical") {
       // Send critical alerts
-      console.error("Critical performance issue detected:", metric);
+      if (import.meta.env.DEV) {
+        // eslint-disable-next-line no-console
+        console.error("Critical performance issue detected:", metric);
+      }
     }
   }
 
@@ -466,7 +496,10 @@ class PerformanceMonitor {
    */
   clear(): void {
     this.metrics = [];
-    console.log("Performance metrics cleared");
+    if (import.meta.env.DEV) {
+      // eslint-disable-next-line no-console
+      console.log("Performance metrics cleared");
+    }
   }
 
   /**

@@ -42,12 +42,18 @@ export class AuthService {
     callback: (user: FirebaseUser | null) => void
   ): () => void {
     if (!this.isAvailable()) {
-      console.warn("Auth not available - using local mode");
+      if (import.meta.env.DEV) {
+        // eslint-disable-next-line no-console
+        console.warn("Auth not available - using local mode");
+      }
       return () => {};
     }
 
     if (!auth) {
-      console.warn("Auth not available");
+      if (import.meta.env.DEV) {
+        // eslint-disable-next-line no-console
+        console.warn("Auth not available");
+      }
       return () => {};
     }
 
@@ -152,7 +158,10 @@ export class AuthService {
 
       await signOut(auth);
     } catch (error) {
-      console.error("Sign out error:", error);
+      if (import.meta.env.DEV) {
+        // eslint-disable-next-line no-console
+        console.error("Sign out error:", error);
+      }
       throw new Error("Failed to sign out");
     }
   }
@@ -193,7 +202,10 @@ export class AuthService {
         photoURL: updates.photoURL,
       });
     } catch (error) {
-      console.error("Profile update error:", error);
+      if (import.meta.env.DEV) {
+        // eslint-disable-next-line no-console
+        console.error("Profile update error:", error);
+      }
       throw new Error("Failed to update profile");
     }
   }

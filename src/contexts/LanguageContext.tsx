@@ -13,19 +13,17 @@ const translations: Record<Language, Record<string, string>> = {
     "nav.logout": "Logout",
 
     // Homepage
-    "header.title": "Authentic Islamic Knowledge",
-    "header.description":
-      "Explore authentic Islamic texts and cross-references between Quran, Hadith, and verified scholarly sources for educational purposes. This platform presents sample data and historical references - for complex religious matters, always consult qualified Islamic scholars and your trusted local Imam.",
+    "header.title": "Quran & Sahih Hadiths",
 
     // Tabs
-    "tabs.data": "Sample Data",
+    "tabs.data": "Featured Islamic Sources",
     "tabs.search": "Cross-Reference Search",
     "tabs.charts": "Charts & Analytics",
     "tabs.quran": "Quran",
     "tabs.hadith": "Hadith",
 
     // Stats
-    "stats.islamicData": "Authentic Sample Data",
+    "stats.islamicData": "Featured Islamic Sources",
     "stats.quranVerses": "Quran Verses",
     "stats.hadiths": "Hadiths",
     "stats.favorites": "Favorites",
@@ -91,13 +89,23 @@ const translations: Record<Language, Record<string, string>> = {
     // Loading States
     "loading.data": "Loading data from API...",
     "loading.quranic": "Loading Quranic data from API...",
-    "loading.search": "Searching across Quran, Hadith, and verified sources...",
+    "loading.search": "Searching across Quran, Hadith, and featured Islamic sources...",
     "loading.mayTakeTime": "This may take a few seconds on first load",
 
     // Common Actions
     "common.search": "Search",
     "common.filter": "Filter",
     "common.sort": "Sort",
+
+    // Sources
+    "sources.primarySource": "Primary Source",
+    "sources.verification": "Verification",
+    "sources.methodology": "Methodology",
+    "sources.references": "References",
+    "sources.sourceInfo": "Source Information",
+    "sources.ijma": "Scholarly Consensus (Ijma)",
+    "sources.scientificVerification": "Scientific Verification",
+    "sources.peerReviewed": "Peer-Reviewed Sources",
     "common.clear": "Clear",
     "common.loading": "Loading...",
     "common.noResults": "No results found",
@@ -181,7 +189,7 @@ const translations: Record<Language, Record<string, string>> = {
     "ui.ariaLabel.sectionTabs": "Section Tabs",
 
     // Data Sources
-    "dataSource.islamicData": "Islamic Data",
+    "dataSource.islamicData": "Featured Islamic Sources",
     "dataSource.quran": "Quran",
     "dataSource.hadith": "Hadith",
     "dataSource.sahihBukhari": "Sahih Bukhari",
@@ -296,7 +304,7 @@ const translations: Record<Language, Record<string, string>> = {
     "filter.fulfillmentStatus": "Fulfillment Status",
     "filter.prophecyCategory": "Prophecy Category",
     "filter.year": "Year",
-    "filter.islamicData": "Islamic Data",
+    "filter.islamicData": "Featured Islamic Sources",
     "filter.quran": "Quran Verses",
     "filter.hadith": "Hadiths",
     "filter.presetPrompt": "Enter preset name:",
@@ -341,16 +349,16 @@ const translations: Record<Language, Record<string, string>> = {
     // --- AdvancedSearchDashboard ---
     "search.advancedSearch": "Advanced Search",
     "search.description":
-      "Search across all available Islamic knowledge including Islamic data, Quran verses, and Sahih hadiths.",
+      "Search across all available Islamic knowledge including featured Islamic Sources, Quranic verses, and hadith collections.",
 
     "search.searching": "Searching...",
     "search.confirmSearch": "Confirm Search",
     "search.newSearch": "New Search",
     "search.readyToSearch": "Ready to Search",
     "search.readyDescription":
-      'Configure your search filters above and click "Confirm Search" to begin exploring Islamic knowledge across Quran, Hadith, and Islamic Data.',
+      'Configure your search filters above and click "Confirm Search" to begin exploring Islamic knowledge across Quran, Hadith, and featured Islamic Sources.',
     "search.readyInstructions":
-      '• Select data sources (Quran, Hadith, Islamic Data)\n• Choose specific filters for each source\n• Enter search terms (optional)\n• Click "Confirm Search" when ready',
+      '• Select data sources (Quran, Hadiths, featured Islamic Sources)\n• Choose specific filters for each source\n• Enter search terms (optional)\n• Click "Confirm Search" when ready',
     "search.features": "Cross-Reference Search Features",
     "search.prophecies": "Prophecies:",
     "search.propheciesDesc": "Status of fulfillment",
@@ -360,7 +368,8 @@ const translations: Record<Language, Record<string, string>> = {
     "search.hadithsDesc": "Authentic narrations",
     "search.crossReference": "Cross-Reference:",
     "search.crossReferenceDesc": "Find connections between sources",
-    "search.consultScholars": "(always consult Scholars for complex topics)",
+    "search.consultScholars":
+      "(always consult qualified Islamic scholars for complex topics)",
     "search.advancedFiltering": "Advanced Filtering",
     "search.quranFilters": "Quran Filters:",
     "search.quranFiltersDesc": "By Surah, verse number, place of revelation",
@@ -456,8 +465,6 @@ const translations: Record<Language, Record<string, string>> = {
     "nav.logout": "تسجيل الخروج",
 
     "header.title": "الآيات الإلهية والإرشاد",
-    "header.description":
-      "اكتشف الآيات المعجزة لله من خلال الوحي القرآني والتوجيه النبوي والحكمة الإلهية.",
 
     "tabs.data": "بيانات تجريبية",
     "tabs.search": "البحث المتقدم",
@@ -884,8 +891,6 @@ const translations: Record<Language, Record<string, string>> = {
     "nav.logout": "لاگ آؤٹ",
 
     "header.title": "اسلامی نشانیاں اور رہنمائی",
-    "header.description":
-      "قرآنی وحی، نبوی رہنمائی اور الہی حکمت کے ذریعے اللہ کی معجزاتی نشانیاں دریافت کریں۔",
 
     "tabs.data": "نمونہ ڈیٹا",
     "tabs.search": "اعلی درجے کی تلاش",
@@ -1315,8 +1320,6 @@ const translations: Record<Language, Record<string, string>> = {
     "nav.logout": "Çıkış Yap",
 
     "header.title": "İslami İşaretler ve Rehberlik",
-    "header.description":
-      "Kur'an vahyi, peygamber rehberliği ve ilahi hikmet aracılığıyla Allah'ın mucizevi işaretlerini keşfedin.",
 
     "tabs.data": "Örnek Veri",
     "tabs.search": "Gelişmiş Arama",
@@ -1746,8 +1749,6 @@ const translations: Record<Language, Record<string, string>> = {
     "nav.logout": "Déconnexion",
 
     "header.title": "Signes Islamiques et Guidance",
-    "header.description":
-      "Découvrez les signes miraculeux d'Allah à travers les révélations coraniques, la guidance prophétique et la sagesse divine.",
 
     "tabs.data": "Données d'Exemple",
     "tabs.search": "Recherche Avancée",
@@ -2192,8 +2193,6 @@ const translations: Record<Language, Record<string, string>> = {
     "nav.logout": "Cerrar Sesión",
 
     "header.title": "Señales Islámicas y Guía",
-    "header.description":
-      "Descubre las señales milagrosas de Allah a través de las revelaciones coránicas, la guía profética y la sabiduría divina.",
 
     "tabs.data": "Datos de Ejemplo",
     "tabs.search": "Búsqueda Avanzada",
@@ -2634,8 +2633,6 @@ const translations: Record<Language, Record<string, string>> = {
     "nav.logout": "Abmelden",
 
     "header.title": "Islamische Zeichen und Führung",
-    "header.description":
-      "Entdecken Sie die wundersamen Zeichen Allahs durch koranische Offenbarungen, prophetische Führung und göttliche Weisheit.",
 
     "tabs.data": "Beispieldaten",
     "tabs.search": "Erweiterte Suche",

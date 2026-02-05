@@ -58,7 +58,10 @@ export class FirestoreService {
 
   // Generic error handler
   private handleError(error: unknown, context: string): never {
-    console.error(`Firestore error in ${context}:`, error);
+    if (import.meta.env.DEV) {
+      // eslint-disable-next-line no-console
+      console.error(`Firestore error in ${context}:`, error);
+    }
     throw new Error(`Database operation failed: ${context}`);
   }
 
@@ -613,7 +616,10 @@ export class FirestoreService {
 
       await addDoc(searchHistoryRef, searchDoc);
     } catch (error) {
-      console.error("Failed to save search history:", error);
+      if (import.meta.env.DEV) {
+        // eslint-disable-next-line no-console
+        console.error("Failed to save search history:", error);
+      }
     }
   }
 
@@ -688,7 +694,10 @@ export class FirestoreService {
 
       await addDoc(analyticsRef, activityDoc);
     } catch (error) {
-      console.error("Failed to track user activity:", error);
+      if (import.meta.env.DEV) {
+        // eslint-disable-next-line no-console
+        console.error("Failed to track user activity:", error);
+      }
     }
   }
 

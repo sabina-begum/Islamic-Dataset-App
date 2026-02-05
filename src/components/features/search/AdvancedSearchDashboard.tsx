@@ -41,6 +41,7 @@ export const AdvancedSearchDashboard: React.FC<AdvancedSearchDashboardProps> =
         quranSurahs: [],
         quranVerseRange: { min: 1, max: 6236 }, // Use actual Quran verse range based on loaded data
         quranPlaceOfRevelation: [],
+        quranSajdahOnly: false, // Filter for Sajdah verses only
         // Initialize new Hadith filters with proper defaults
         hadithNumberRange: { min: 1, max: 13143 }, // Use actual Hadith range
         hadithCategories: [],
@@ -60,7 +61,6 @@ export const AdvancedSearchDashboard: React.FC<AdvancedSearchDashboardProps> =
           type: "islamic data" as const,
           title: item.title,
           content: [
-            item.description || "",
             item.notes || "",
             item.sources?.primary || "",
             item.sources?.verification || "",
@@ -267,6 +267,14 @@ export const AdvancedSearchDashboard: React.FC<AdvancedSearchDashboardProps> =
                 });
               }
 
+              // Apply Sajdah filter
+              if (filterState.quranSajdahOnly) {
+                quranResults = quranResults.filter((result) => {
+                  const ayah = result.data as QuranAyah;
+                  return ayah.sajah_ayah === true;
+                });
+              }
+
               results.push(...quranResults);
             }
 
@@ -305,8 +313,8 @@ export const AdvancedSearchDashboard: React.FC<AdvancedSearchDashboardProps> =
                   result.source.toLowerCase(),
                 ].join(" ");
 
-                // Check if all search terms are found
-                return searchTerms.every((term) =>
+                // Check if ANY search terms are found (more flexible)
+                return searchTerms.some((term) =>
                   searchableText.includes(term)
                 );
               });
@@ -459,16 +467,20 @@ export const AdvancedSearchDashboard: React.FC<AdvancedSearchDashboardProps> =
             const actualResultsCount = results.length;
             results = results.slice(0, MAX_RESULTS);
 
-            console.log("Search results before limiting:", {
-              actualResultsCount,
-              limitedResultsCount: results.length,
-              totalDataCount,
-              filteredDataCount,
-              actualPercentage:
-                ((actualResultsCount / totalDataCount) * 100).toFixed(1) + "%",
-              limitedPercentage:
-                ((results.length / totalDataCount) * 100).toFixed(1) + "%",
-            });
+            if (import.meta.env.DEV) {
+              // eslint-disable-next-line no-console
+              console.log("Search results before limiting:", {
+                actualResultsCount,
+                limitedResultsCount: results.length,
+                totalDataCount,
+                filteredDataCount,
+                actualPercentage:
+                  ((actualResultsCount / totalDataCount) * 100).toFixed(1) +
+                  "%",
+                limitedPercentage:
+                  ((results.length / totalDataCount) * 100).toFixed(1) + "%",
+              });
+            }
 
             setFilteredResults(results);
             setActualResultsCount(actualResultsCount); // Set actual results count
@@ -521,6 +533,7 @@ export const AdvancedSearchDashboard: React.FC<AdvancedSearchDashboardProps> =
           quranSurahs: [],
           quranVerseRange: { min: 1, max: 6236 }, // Use actual Quran verse range based on loaded data
           quranPlaceOfRevelation: [],
+          quranSajdahOnly: false, // Filter for Sajdah verses only
           // Initialize new Hadith filters with proper defaults
           hadithNumberRange: { min: 1, max: 13143 }, // Use actual Hadith range
           hadithCategories: [],
@@ -547,18 +560,24 @@ export const AdvancedSearchDashboard: React.FC<AdvancedSearchDashboardProps> =
       const percentageOfTotal = useMemo(() => {
         // Only calculate if we have actual data loaded
         if (filteredDataCount === 0) {
-          console.log(
-            "No filtered data available, filteredDataCount:",
-            filteredDataCount
-          );
+          if (import.meta.env.DEV) {
+            // eslint-disable-next-line no-console
+            console.log(
+              "No filtered data available, filteredDataCount:",
+              filteredDataCount
+            );
+          }
           return "0.0";
         }
 
         if (filteredResults.length === 0) {
-          console.log(
-            "No search results, filteredResults.length:",
-            filteredResults.length
-          );
+          if (import.meta.env.DEV) {
+            // eslint-disable-next-line no-console
+            console.log(
+              "No search results, filteredResults.length:",
+              filteredResults.length
+            );
+          }
           return "0.0";
         }
 
@@ -567,17 +586,20 @@ export const AdvancedSearchDashboard: React.FC<AdvancedSearchDashboardProps> =
           actualResultsCount > 0 ? actualResultsCount : filteredResults.length;
         const percentage = (resultsCountForPercentage / totalDataCount) * 100;
 
-        console.log("Debug percentage calculation:", {
-          filteredResultsLength: filteredResults.length,
-          actualResultsCount: actualResultsCount,
-          resultsCountForPercentage,
-          filteredDataCount,
-          calculatedPercentage: percentage,
-          dataLength: data.length,
-          quranDataLength: quranData.length,
-          hadithDataLength: hadithData.length,
-          filters: filters,
-        });
+        if (import.meta.env.DEV) {
+          // eslint-disable-next-line no-console
+          console.log("Debug percentage calculation:", {
+            filteredResultsLength: filteredResults.length,
+            actualResultsCount: actualResultsCount,
+            resultsCountForPercentage,
+            filteredDataCount,
+            calculatedPercentage: percentage,
+            dataLength: data.length,
+            quranDataLength: quranData.length,
+            hadithDataLength: hadithData.length,
+            filters: filters,
+          });
+        }
 
         return percentage.toFixed(1);
       }, [
@@ -675,6 +697,7 @@ export const AdvancedSearchDashboard: React.FC<AdvancedSearchDashboardProps> =
                     quranSurahs: [],
                     quranVerseRange: { min: 1, max: 6236 },
                     quranPlaceOfRevelation: [],
+                    quranSajdahOnly: false,
                     hadithNumberRange: { min: 1, max: 13143 },
                     hadithCategories: [],
                   });
@@ -711,59 +734,48 @@ export const AdvancedSearchDashboard: React.FC<AdvancedSearchDashboardProps> =
                 backgroundBlendMode: "overlay",
               }}
             >
-              {/* Semi-transparent overlay to ensure text readability */}
-              <div className="absolute inset-0 bg-neutral-500/70 dark:bg-neutral-800/20"></div>
-              <div className="max-w-md mx-auto relative z-10">
+              {/* Semi-transparent overlay to ensure text readability - Same opacity for both modes */}
+              <div className="absolute inset-0 bg-neutral-500/50 dark:bg-neutral-800/50"></div>
+              <div className="max-w-md mx-auto text-left relative z-10">
                 <h3
-                  className="text-lg font-semibold mb-2 transform hover:scale-101 transition-transform duration-300 search-ready-title"
+                  className="text-lg font-semibold mb-2 search-ready-title flex items-center gap-2"
                   style={{
                     color: "#EDEADE",
-                    textShadow: `
-                      0 0 3px rgba(244, 228, 188, 0.4),
-                      0 0 6px rgba(244, 228, 188, 0.2),
-                      0 1px 2px rgba(0, 0, 0, 0.4),
-                      0 2px 4px rgba(0, 0, 0, 0.2),
-                      1px 1px 0px rgba(255, 215, 0, 0.1)
-                    `,
-                    filter: "drop-shadow(0 0 4px rgba(244, 228, 188, 0.1))",
-                    transform: "perspective(1000px) rotateX(1deg)",
-                    transformStyle: "preserve-3d",
+                    textShadow: "0 3px 6px rgba(0, 0, 0, 0.9)",
                   }}
                 >
                   {t("search.readyToSearch")}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    fill="currentColor"
+                    className="bi bi-question-lg flex-shrink-0"
+                    viewBox="0 0 16 16"
+                    style={{
+                      filter: "drop-shadow(0 3px 6px rgba(0, 0, 0, 0.9))",
+                    }}
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M4.475 5.458c-.284 0-.514-.237-.47-.517C4.28 3.24 5.576 2 7.825 2c2.25 0 3.767 1.36 3.767 3.215 0 1.344-.665 2.288-1.79 2.973-1.1.659-1.414 1.118-1.414 2.01v.03a.5.5 0 0 1-.5.5h-.77a.5.5 0 0 1-.5-.495l-.003-.2c-.043-1.221.477-2.001 1.645-2.712 1.03-.632 1.397-1.135 1.397-2.028 0-.979-.758-1.698-1.926-1.698-1.009 0-1.71.529-1.938 1.402-.066.254-.278.461-.54.461h-.777ZM7.496 14c.622 0 1.095-.474 1.095-1.09 0-.618-.473-1.092-1.095-1.092-.606 0-1.087.474-1.087 1.091S6.89 14 7.496 14"
+                    />
+                  </svg>
                 </h3>
                 <p
-                  className="mb-4 transform hover:scale-101 transition-transform duration-300 search-ready-description"
+                  className="mb-4 search-ready-description"
                   style={{
-                    color: "#EDEADE",
-                    textShadow: `
-                      0 0 2px rgba(232, 213, 183, 0.3),
-                      0 0 4px rgba(232, 213, 183, 0.2),
-                      0 1px 1px rgba(0, 0, 0, 0.3),
-                      0 1px 2px rgba(0, 0, 0, 0.2),
-                      1px 1px 0px rgba(255, 215, 0, 0.1)
-                    `,
-                    filter: "drop-shadow(0 0 3px rgba(232, 213, 183, 0.1))",
-                    transform: "perspective(1000px) rotateX(0.5deg)",
-                    transformStyle: "preserve-3d",
+                    color: "#fffdd0",
+                    textShadow: "0 3px 6px rgba(0, 0, 0, 0.9)",
                   }}
                 >
                   {t("search.readyDescription")}
                 </p>
                 <div
-                  className="text-sm transform hover:scale-101 transition-transform duration-300 search-ready-list"
+                  className="text-sm search-ready-list"
                   style={{
-                    color: "#EDEADE",
-                    textShadow: `
-                      0 0 2px rgba(244, 228, 188, 0.3),
-                      0 0 4px rgba(244, 228, 188, 0.2),
-                      0 1px 1px rgba(0, 0, 0, 0.3),
-                      0 1px 2px rgba(0, 0, 0, 0.2),
-                      1px 1px 0px rgba(255, 215, 0, 0.1)
-                    `,
-                    filter: "drop-shadow(0 0 3px rgba(244, 228, 188, 0.1))",
-                    transform: "perspective(1000px) rotateX(0.3deg)",
-                    transformStyle: "preserve-3d",
+                    color: "#fffdd0",
+                    textShadow: "0 3px 6px rgba(0, 0, 0, 0.9)",
                   }}
                 >
                   {t("search.readyInstructions")
@@ -778,39 +790,25 @@ export const AdvancedSearchDashboard: React.FC<AdvancedSearchDashboardProps> =
               <style
                 dangerouslySetInnerHTML={{
                   __html: `
-                  @media (prefers-color-scheme: dark) {
-                    .dark .search-ready-title {
-                      color: #10b981 !important;
-                      text-shadow: 
-                        0 0 3px rgba(16, 185, 129, 0.4),
-                        0 0 6px rgba(16, 185, 129, 0.2),
-                        0 1px 2px rgba(0, 0, 0, 0.4),
-                        0 2px 4px rgba(0, 0, 0, 0.2),
-                        1px 1px 0px rgba(16, 185, 129, 0.1) !important;
-                      filter: drop-shadow(0 0 4px rgba(16, 185, 129, 0.1)) !important;
-                    }
-                    .dark .search-ready-description {
-                      color: #10b981 !important;
-                      text-shadow: 
-                        0 0 2px rgba(209, 213, 219, 0.3),
-                        0 0 4px rgba(209, 213, 219, 0.2),
-                        0 1px 1px rgba(0, 0, 0, 0.3),
-                        0 1px 2px rgba(0, 0, 0, 0.2),
-                        1px 1px 0px rgba(209, 213, 219, 0.1) !important;
-                      filter: drop-shadow(0 0 3px rgba(209, 213, 219, 0.1)) !important;
-                    }
-                    .dark .search-ready-list {
-                      color: #10b981 !important;
-                      text-shadow: 
-                        0 0 2px rgba(16, 185, 129, 0.3),
-                        0 0 4px rgba(16, 185, 129, 0.2),
-                        0 1px 1px rgba(0, 0, 0, 0.3),
-                        0 1px 2px rgba(0, 0, 0, 0.2),
-                        1px 1px 0px rgba(16, 185, 129, 0.1) !important;
-                      filter: drop-shadow(0 0 3px rgba(16, 185, 129, 0.1)) !important;
-                    }
-                  }
-                `,
+                   @media (prefers-color-scheme: dark) {
+                     .dark .search-ready-title {
+                       color: #f5f5dc !important;
+                       text-shadow: 0 3px 6px rgba(0, 0, 0, 0.9) !important;
+                     }
+                                           .dark .search-ready-title svg {
+                        filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.9)) !important;
+                        color: #f5f5dc !important;
+                      }
+                     .dark .search-ready-description {
+                       color: #f5f5dc !important;
+                       text-shadow: 0 3px 6px rgba(0, 0, 0, 0.9) !important;
+                     }
+                     .dark .search-ready-list {
+                       color: #f5f5dc !important;
+                       text-shadow: 0 3px 6px rgba(0, 0, 0, 0.9) !important;
+                     }
+                   }
+                 `,
                 }}
               />
             </div>

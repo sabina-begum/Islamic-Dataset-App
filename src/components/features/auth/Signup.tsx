@@ -162,7 +162,10 @@ const Signup: React.FC<SignupProps> = ({ onClose, onSwitchToLogin }) => {
       await signup(formData.email, formData.password);
       onClose();
     } catch (error) {
-      console.error("Signup failed:", error);
+      if (import.meta.env.DEV) {
+        // eslint-disable-next-line no-console
+        console.error("Signup failed:", error);
+      }
     }
   };
 

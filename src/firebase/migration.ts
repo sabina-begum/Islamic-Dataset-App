@@ -50,7 +50,10 @@ export class DataMigrationService {
           hadithData.length === 0,
       };
     } catch (error) {
-      console.error("Failed to check migration status:", error);
+      if (import.meta.env.DEV) {
+        // eslint-disable-next-line no-console
+        console.error("Failed to check migration status:", error);
+      }
       return {
         islamicDataCount: 0,
         quranDataCount: 0,
@@ -80,7 +83,8 @@ export class DataMigrationService {
     for (const item of data) {
       try {
         // Remove id, createdAt, updatedAt for migration
-        const { id, createdAt, updatedAt, ...migrationData } = item;
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { id: _, createdAt: __, updatedAt: ___, ...migrationData } = item;
         await firestoreService.addIslamicData(migrationData);
         migrated++;
       } catch (error) {
@@ -115,7 +119,8 @@ export class DataMigrationService {
     for (const item of data) {
       try {
         // Remove id for migration
-        const { id, ...migrationData } = item;
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { id: _, ...migrationData } = item;
         await firestoreService.addQuranData(migrationData);
         migrated++;
       } catch (error) {
@@ -152,7 +157,8 @@ export class DataMigrationService {
     for (const item of data) {
       try {
         // Remove id and createdAt for migration
-        const { id, createdAt, ...migrationData } = item;
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { id: _, createdAt: __, ...migrationData } = item;
         await firestoreService.addHadithData(migrationData);
         migrated++;
       } catch (error) {
@@ -261,7 +267,10 @@ export class DataMigrationService {
     try {
       // This would require implementing delete methods in FirestoreService
       // For now, we'll just return a placeholder
-      console.warn("Clear all data functionality not implemented yet");
+      if (import.meta.env.DEV) {
+        // eslint-disable-next-line no-console
+        console.warn("Clear all data functionality not implemented yet");
+      }
       return { success: true, errors: [] };
     } catch (error) {
       errors.push(`Failed to clear data: ${error}`);

@@ -1,0 +1,78 @@
+[build]
+  publish = "dist"
+  command = "npm ci --legacy-peer-deps && npm run build:netlify"
+
+[build.environment]
+  NODE_VERSION = "20"
+  NPM_CONFIG_PRODUCTION = "false"
+  VITE_DISABLE_WORKERS = "true"
+
+# Security headers are now handled by public/_headers file for better A+ rating
+# This section is commented out to avoid conflicts
+# [[headers]]
+#   for = "/*"
+#   [headers.values]
+#     X-Frame-Options = "SAMEORIGIN"
+#     X-Content-Type-Options = "nosniff"
+#     Referrer-Policy = "strict-origin-when-cross-origin"
+#     Permissions-Policy = "camera=(), microphone=(), geolocation=(), payment=(), usb=(), magnetometer=(), gyroscope=(), accelerometer=(), autoplay=(), encrypted-media=(), fullscreen=(self), picture-in-picture=(), publickey-credentials-get=(), screen-wake-lock=(), sync-xhr=(), web-share=(), xr-spatial-tracking=()"
+#     Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload"
+#     X-XSS-Protection = "1; mode=block"
+#     X-Download-Options = "noopen"
+#     X-Permitted-Cross-Domain-Policies = "none"
+#     Cross-Origin-Embedder-Policy = "require-corp"
+#     Cross-Origin-Opener-Policy = "same-origin"
+#     Cross-Origin-Resource-Policy = "same-origin"
+#     X-DNS-Prefetch-Control = "off"
+
+[[headers]]
+  for = "*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "*.png"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "*.jpg"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "*.svg"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "*.ico"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "*.woff"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "*.woff2"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "*.html"
+  [headers.values]
+    Cache-Control = "no-cache, no-store, must-revalidate"
+    Pragma = "no-cache"
+    Expires = "0"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

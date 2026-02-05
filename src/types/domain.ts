@@ -1,7 +1,17 @@
+/**
+ * Copyright (c) 2024 Reflect & Implement
+ *
+ * This file contains domain-specific TypeScript interfaces for the Reflect
+ * & Implement application. These types define the structure of knowledge
+ * data, content entries, and related functionality.
+ *
+ * The original type definitions and data structures are protected by copyright.
+ * Religious content (Quran verses, Hadith text) remains in the public domain.
+ */
+
 // Domain-specific types
 export interface IslamicData {
   title: string;
-  description?: string;
   type: string;
   notes?: string;
   sources?: string[];

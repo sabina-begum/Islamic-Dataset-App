@@ -55,7 +55,10 @@ export const UserDashboard: React.FC<UserDashboardProps> = ({
           });
         }
       } catch (err) {
-        console.error("Failed to load user stats:", err);
+        if (import.meta.env.DEV) {
+          // eslint-disable-next-line no-console
+          console.error("Failed to load user stats:", err);
+        }
       } finally {
         setIsLoading(false);
       }

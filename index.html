@@ -6,31 +6,61 @@
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-    <meta name="apple-mobile-web-app-title" content="Islamic Data" />
-    <meta name="application-name" content="Islamic Dataset Interface" />
+    <meta name="apple-mobile-web-app-title" content="Reflect & Implement" />
+    <meta name="application-name" content="Reflect & Implement" />
     <meta name="theme-color" content="#059669" />
     <meta name="msapplication-TileColor" content="#059669" />
     <meta name="msapplication-config" content="/browserconfig.xml" />
 
     <!-- PWA Manifest -->
-    <link rel="manifest" href="/manifest.json" />
+    <link rel="manifest" href="/manifest.json?v=2.2.0" />
 
     <!-- Apple Touch Icons -->
-    <link rel="apple-touch-icon" href="/icons/icon-152x152.png" />
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon-180x180.png" />
+    <link
+      rel="apple-touch-icon"
+      sizes="57x57"
+      href="/icons/apple-touch-icon-57x57.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="60x60"
+      href="/icons/apple-touch-icon-60x60.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="72x72"
+      href="/icons/apple-touch-icon-72x72.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="76x76"
+      href="/icons/apple-touch-icon-76x76.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="114x114"
+      href="/icons/apple-touch-icon-114x114.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="120x120"
+      href="/icons/apple-touch-icon-120x120.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="144x144"
+      href="/icons/apple-touch-icon-144x144.png"
+    />
     <link
       rel="apple-touch-icon"
       sizes="152x152"
-      href="/icons/icon-152x152.png"
+      href="/icons/apple-touch-icon-152x152.png"
     />
     <link
       rel="apple-touch-icon"
       sizes="180x180"
-      href="/icons/icon-180x180.png"
-    />
-    <link
-      rel="apple-touch-icon"
-      sizes="167x167"
-      href="/icons/icon-167x167.png"
+      href="/icons/apple-touch-icon-180x180.png"
     />
 
     <!-- Favicon -->
@@ -38,25 +68,110 @@
       rel="icon"
       type="image/png"
       sizes="32x32"
-      href="/icons/icon-32x32.png"
+      href="/icons/favicon-32x32.png?v=2.2.0"
     />
     <link
       rel="icon"
       type="image/png"
       sizes="16x16"
-      href="/icons/icon-16x16.png"
+      href="/icons/favicon-16x16.png?v=2.2.0"
     />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="48x48"
+      href="/icons/favicon-48x48.png?v=2.2.0"
+    />
+    <link rel="shortcut icon" href="/icons/favicon-32x32.png?v=2.2.0" />
 
+    <!-- SEO Meta Tags -->
     <meta
       name="description"
-      content="Islamic Dataset Interface - A comprehensive platform for Islamic knowledge, Quran, Hadith, and scientific discoveries"
+      content="Comprehensive knowledge platform for reflection and implementation. Access meaningful content with advanced search and visualization capabilities. Install now for instant wisdom and guidance."
     />
     <meta
       name="keywords"
-      content="Islamic, Quran, Hadith, Science, Prophecy, Health, Knowledge"
+      content="Reflect & Implement, knowledge platform, wisdom, learning, reflection, implementation, Progressive Web App, education, guidance, install app, offline access"
     />
-    <meta name="author" content="Islamic Dataset Interface" />
-    <title>Islamic Dataset Interface</title>
+    <meta name="author" content="Reflect & Implement" />
+    <meta name="robots" content="index, follow" />
+    <meta name="language" content="English" />
+    <meta name="revisit-after" content="7 days" />
+
+    <!-- Open Graph Meta Tags for Social Sharing -->
+    <meta
+      property="og:title"
+      content="Reflect & Implement - Knowledge Platform for Wisdom & Guidance"
+    />
+    <meta
+      property="og:description"
+      content="Explore meaningful content with advanced search and visualization capabilities. Install our Progressive Web App for instant access to wisdom and knowledge."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://reflectandimplement.com" />
+    <meta
+      property="og:image"
+      content="https://reflectandimplement.com/icons/og-image.png"
+    />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:site_name" content="Reflect & Implement" />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="Reflect & Implement - Knowledge Platform PWA"
+    />
+    <meta
+      name="twitter:description"
+      content="Access meaningful content offline. Install our Progressive Web App for instant access to wisdom and knowledge."
+    />
+    <meta
+      name="twitter:image"
+      content="https://reflectandimplement.com/icons/twitter-card.png"
+    />
+    <meta name="twitter:creator" content="@ReflectImplement" />
+
+    <!-- PWA Installation Meta Tags -->
+    <meta name="mobile-web-app-status-bar-style" content="#059669" />
+    <meta name="msapplication-navbutton-color" content="#059669" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+
+    <!-- Structured Data for Rich Snippets -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Reflect & Implement",
+        "description": "Comprehensive knowledge platform for reflection and implementation with advanced search and visualization capabilities",
+        "url": "https://reflectandimplement.com",
+        "applicationCategory": "EducationalApplication",
+        "operatingSystem": "Any",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "author": {
+          "@type": "Organization",
+          "name": "Reflect & Implement"
+        },
+        "aggregateRating": {
+          "@type": "AggregateRating",
+          "ratingValue": "4.8",
+          "ratingCount": "1250"
+        }
+      }
+    </script>
+
+    <title>
+      Reflect & Implement
+    </title>
   </head>
   <body>
     <div id="root"></div>

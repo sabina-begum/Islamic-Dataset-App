@@ -100,7 +100,10 @@ export class SearchService {
         },
       };
     } catch (error) {
-      console.error("Search failed:", error);
+      if (import.meta.env.DEV) {
+        // eslint-disable-next-line no-console
+        console.error("Search failed:", error);
+      }
       return {
         results: [],
         totalResults: 0,
@@ -137,7 +140,10 @@ export class SearchService {
 
       return results;
     } catch (error) {
-      console.error("Islamic data search failed:", error);
+      if (import.meta.env.DEV) {
+        // eslint-disable-next-line no-console
+        console.error("Islamic data search failed:", error);
+      }
       return [];
     }
   }
@@ -169,7 +175,10 @@ export class SearchService {
 
       return results;
     } catch (error) {
-      console.error("Quran data search failed:", error);
+      if (import.meta.env.DEV) {
+        // eslint-disable-next-line no-console
+        console.error("Quran data search failed:", error);
+      }
       return [];
     }
   }
@@ -201,7 +210,10 @@ export class SearchService {
 
       return results;
     } catch (error) {
-      console.error("Hadith data search failed:", error);
+      if (import.meta.env.DEV) {
+        // eslint-disable-next-line no-console
+        console.error("Hadith data search failed:", error);
+      }
       return [];
     }
   }
@@ -249,11 +261,10 @@ export class SearchService {
 
   // Extract searchable content from item
   private extractContent(item: IslamicData | QuranAyah | HadithEntry): string {
-    if ("title" in item && "description" in item) {
+    if ("title" in item && "notes" in item) {
       // IslamicData
       return [
         item.title,
-        item.description,
         item.notes,
         item.sources?.primary,
         item.sources?.verification,
@@ -325,7 +336,10 @@ export class SearchService {
 
       return [...new Set(suggestions)].slice(0, limit);
     } catch (error) {
-      console.error("Failed to get search suggestions:", error);
+      if (import.meta.env.DEV) {
+        // eslint-disable-next-line no-console
+        console.error("Failed to get search suggestions:", error);
+      }
       return [];
     }
   }
@@ -373,7 +387,10 @@ export class SearchService {
         { query: "fulfillment", count: 30 },
       ];
     } catch (error) {
-      console.error("Failed to get popular searches:", error);
+      if (import.meta.env.DEV) {
+        // eslint-disable-next-line no-console
+        console.error("Failed to get popular searches:", error);
+      }
       return [];
     }
   }
@@ -431,6 +448,7 @@ export class SearchService {
       quranSurahs: [],
       quranVerseRange: { min: 1, max: 6236 },
       quranPlaceOfRevelation: [],
+      quranSajdahOnly: false,
       hadithNumberRange: { min: 1, max: 9999 },
       hadithCategories: [],
       ...filters,
@@ -458,6 +476,7 @@ export class SearchService {
       quranSurahs: [],
       quranVerseRange: { min: 1, max: 6236 },
       quranPlaceOfRevelation: [],
+      quranSajdahOnly: false,
       hadithNumberRange: { min: 1, max: 9999 },
       hadithCategories: [],
       ...filters,
@@ -486,6 +505,7 @@ export class SearchService {
       quranSurahs: [],
       quranVerseRange: { min: 1, max: 6236 },
       quranPlaceOfRevelation: [],
+      quranSajdahOnly: false,
       hadithNumberRange: { min: 1, max: 9999 },
       hadithCategories: [],
       ...filters,

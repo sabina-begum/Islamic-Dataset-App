@@ -25,8 +25,11 @@ export class CopyrightProtection {
     this.isInitialized = true;
   }
 
-  // Add copyright notice to console
+  // Add copyright notice to console (disabled by default)
   private addCopyrightNotice(): void {
+    // Copyright notice disabled - no console output
+    // Uncomment the following code and set VITE_ENABLE_COPYRIGHT=true to enable
+    /*
     const copyrightText = `
 ╔══════════════════════════════════════════════════════════════╗
 ║                    COPYRIGHT NOTICE                          ║
@@ -41,7 +44,9 @@ export class CopyrightProtection {
 ╚══════════════════════════════════════════════════════════════╝
     `;
 
+    // eslint-disable-next-line no-console
     console.log(copyrightText);
+    */
   }
 
   // Add professional copyright notice (without blocking tools)
@@ -53,8 +58,11 @@ export class CopyrightProtection {
     this.addWatermark();
   }
 
-  // Add professional copyright notice to console
+  // Add professional copyright notice to console (disabled by default)
   private addConsoleWarning(): void {
+    // Copyright notice disabled - no console output
+    // Uncomment the following code and set VITE_ENABLE_COPYRIGHT=true to enable
+    /*
     const notice = `
 📚 Islamic Dataset Interface - Copyright Notice
 
@@ -65,7 +73,9 @@ please contact: begumsabina81193@gmail.com
 Thank you for respecting intellectual property rights.
     `;
 
+    // eslint-disable-next-line no-console
     console.log(notice);
+    */
   }
 
   // Protect source code visibility
@@ -88,7 +98,8 @@ Thank you for respecting intellectual property rights.
   // Add invisible watermark
   private addWatermark(): void {
     const watermark = document.createElement("div");
-    watermark.innerHTML = "© 2024 Islamic Dataset Interface";
+    // Use textContent instead of innerHTML for Trusted Types compatibility
+    watermark.textContent = "© 2024 Islamic Dataset Interface";
     watermark.style.cssText = `
       position: fixed;
       top: 50%;
@@ -125,7 +136,12 @@ Thank you for respecting intellectual property rights.
 }
 
 // Initialize copyright protection when the module is loaded
+// Only initialize if explicitly enabled via environment variable
 const copyrightProtection = CopyrightProtection.getInstance();
-copyrightProtection.initialize();
+
+// Only initialize if explicitly enabled
+if (import.meta.env.VITE_ENABLE_COPYRIGHT === "true") {
+  copyrightProtection.initialize();
+}
 
 export default copyrightProtection;

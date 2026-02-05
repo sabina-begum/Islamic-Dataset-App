@@ -166,7 +166,10 @@ export const exportToPDF = async (data: ExportData): Promise<void> => {
     // Save the PDF
     doc.save(generateFilename("islamic_data_export", "pdf"));
   } catch (error) {
-    console.error("PDF export failed:", error);
+    if (import.meta.env.DEV) {
+      // eslint-disable-next-line no-console
+      console.error("PDF export failed:", error);
+    }
     // Fallback to JSON if PDF fails
     exportToJSON(data);
   }
@@ -192,7 +195,10 @@ export const exportData = async (
         throw new Error(`Unsupported export format: ${options.format}`);
     }
   } catch (error) {
-    console.error("Export failed:", error);
+    if (import.meta.env.DEV) {
+      // eslint-disable-next-line no-console
+      console.error("Export failed:", error);
+    }
     throw error;
   }
 };
@@ -225,7 +231,10 @@ export const parseShareableLink = (): ExportData | null => {
       totalResults: decodedData.results,
     };
   } catch (error) {
-    console.error("Failed to parse shareable link:", error);
+    if (import.meta.env.DEV) {
+      // eslint-disable-next-line no-console
+      console.error("Failed to parse shareable link:", error);
+    }
     return null;
   }
 };

@@ -231,13 +231,17 @@ export class ErrorHandler {
       try {
         listener(error);
       } catch (err) {
-        console.error("Error in error listener:", err);
+        if (import.meta.env.DEV) {
+          // eslint-disable-next-line no-console
+          console.error("Error in error listener:", err);
+        }
       }
     });
   }
 
   private logError(error: AppError): void {
-    if (process.env.NODE_ENV === "development") {
+    if (import.meta.env.DEV) {
+      // eslint-disable-next-line no-console
       console.error("App Error:", {
         id: error.id,
         message: error.message,

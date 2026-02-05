@@ -56,7 +56,7 @@ const compressData = (data: FavoriteItem[]): string => {
           title: item.title,
           itemType: item.type,
           // Only keep essential fields
-          description: item.description?.substring(0, 200), // Limit description length
+          description: item.title?.substring(0, 200), // Use title instead of description
           fulfillmentStatus: item.fulfillmentStatus,
           yearRevealed: item.yearRevealed,
           yearFulfilled: item.yearFulfilled,
@@ -163,7 +163,10 @@ export function useFavorites() {
       }
       setLoading(false);
     } catch (error) {
-      console.error("Failed to load favorites:", error);
+      if (import.meta.env.DEV) {
+        // eslint-disable-next-line no-console
+        console.error("Failed to load favorites:", error);
+      }
       setFavorites([]);
       setLoading(false);
       setError("Failed to load favorites from Firestore");
@@ -184,7 +187,10 @@ export function useFavorites() {
           setFavorites([]);
         }
       } catch (error) {
-        console.error("Failed to load local favorites:", error);
+        if (import.meta.env.DEV) {
+          // eslint-disable-next-line no-console
+          console.error("Failed to load local favorites:", error);
+        }
         setFavorites([]);
       }
       return;
@@ -232,7 +238,10 @@ export function useFavorites() {
           // Item already exists, do nothing
         }
       } catch (error) {
-        console.error("Failed to add favorite to local storage:", error);
+        if (import.meta.env.DEV) {
+          // eslint-disable-next-line no-console
+          console.error("Failed to add favorite to local storage:", error);
+        }
         setError("Failed to add favorite to local storage");
       }
       return;
@@ -301,7 +310,10 @@ export function useFavorites() {
         }
       }
     } catch (error) {
-      console.error("Failed to add favorite:", error);
+      if (import.meta.env.DEV) {
+        // eslint-disable-next-line no-console
+        console.error("Failed to add favorite:", error);
+      }
       setError("Failed to add favorite");
     }
   };
@@ -322,7 +334,10 @@ export function useFavorites() {
         localStorage.setItem(LOCAL_STORAGE_KEY, compressedData);
         setFavorites(updatedFavorites);
       } catch (error) {
-        console.error("Failed to remove favorite from local storage:", error);
+        if (import.meta.env.DEV) {
+          // eslint-disable-next-line no-console
+          console.error("Failed to remove favorite from local storage:", error);
+        }
         setError("Failed to remove favorite from local storage");
       }
       return;
@@ -424,7 +439,10 @@ export function useFavorites() {
         }
       }
     } catch (error) {
-      console.error("Failed to remove favorite:", error);
+      if (import.meta.env.DEV) {
+        // eslint-disable-next-line no-console
+        console.error("Failed to remove favorite:", error);
+      }
       setError("Failed to remove favorite");
     }
   };

@@ -32,7 +32,10 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error("ErrorBoundary caught an error:", error, errorInfo);
+    if (import.meta.env.DEV) {
+      // eslint-disable-next-line no-console
+      console.error("ErrorBoundary caught an error:", error, errorInfo);
+    }
 
     this.setState({
       error,
@@ -45,8 +48,11 @@ export class ErrorBoundary extends Component<Props, State> {
     }
 
     // Log to external service in production
-    if (process.env.NODE_ENV === "production") {
-      console.error("Production error:", error);
+    if (import.meta.env.MODE === "production") {
+      if (import.meta.env.DEV) {
+        // eslint-disable-next-line no-console
+        console.error("Production error:", error);
+      }
     }
   }
 
@@ -70,7 +76,10 @@ export class ErrorBoundary extends Component<Props, State> {
       };
 
       // In a real app, you would send this to your error reporting service
-      console.log("Error report:", errorReport);
+      if (import.meta.env.DEV) {
+        // eslint-disable-next-line no-console
+        console.log("Error report:", errorReport);
+      }
 
       // For now, just show an alert
       alert("Error has been reported. Thank you for your feedback!");
@@ -130,7 +139,7 @@ export class ErrorBoundary extends Component<Props, State> {
                 </button>
               </div>
 
-              {process.env.NODE_ENV === "development" && this.state.error && (
+              {import.meta.env.DEV && this.state.error && (
                 <details className="mt-4 text-left">
                   <summary className="cursor-pointer text-sm text-stone-500 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-300">
                     Error Details (Development)

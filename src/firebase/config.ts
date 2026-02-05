@@ -51,12 +51,21 @@ if (isFirebaseConfigured()) {
     //   analytics = getAnalytics(app);
     // }
 
-    console.log("✅ Firebase initialized successfully");
+    if (import.meta.env.DEV) {
+      // eslint-disable-next-line no-console
+      console.log("✅ Firebase initialized successfully");
+    }
   } catch (error) {
-    console.error("❌ Firebase initialization failed:", error);
+    if (import.meta.env.DEV) {
+      // eslint-disable-next-line no-console
+      console.error("❌ Firebase initialization failed:", error);
+    }
   }
 } else {
-  console.warn("⚠️ Firebase not configured - using local data only");
+  if (import.meta.env.DEV) {
+    // eslint-disable-next-line no-console
+    console.warn("⚠️ Firebase not configured - using local data only");
+  }
 }
 
 export { app, db, auth, storage, isFirebaseConfigured };

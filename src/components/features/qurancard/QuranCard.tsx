@@ -1,4 +1,5 @@
 import type { QuranAyah } from "../../../types/Types";
+import React from "react";
 
 interface QuranCardProps {
   ayah: QuranAyah;

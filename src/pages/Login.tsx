@@ -21,33 +21,25 @@ const Login: React.FC = () => {
   };
 
   return (
-    <main className="px-4 py-8">
-      <Breadcrumb />
-      <div className="max-w-md mx-auto">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-            {isLogin ? "Welcome Back" : "Join Us"}
-          </h1>
-          <p className="text-gray-600 dark:text-gray-400">
-            {isLogin
-              ? "Sign in to access your account and favorites"
-              : "Create an account to save favorites and track your activity"}
-          </p>
-        </div>
+    <div className="min-h-screen bg-stone-50 dark:bg-stone-950 transition-colors duration-300">
+      <div className="container mx-auto max-w-4xl px-4 py-8">
+        <Breadcrumb />
 
-        {isLogin ? (
-          <LoginForm
-            onSuccess={handleSuccess}
-            onSwitchToSignup={handleSwitchToSignup}
-          />
-        ) : (
-          <SignupForm
-            onSuccess={handleSuccess}
-            onSwitchToLogin={handleSwitchToLogin}
-          />
-        )}
+        <div className="max-w-md mx-auto">
+          {isLogin ? (
+            <LoginForm
+              onSuccess={handleSuccess}
+              onSwitchToSignup={handleSwitchToSignup}
+            />
+          ) : (
+            <SignupForm
+              onSuccess={handleSuccess}
+              onSwitchToLogin={handleSwitchToLogin}
+            />
+          )}
+        </div>
       </div>
-    </main>
+    </div>
   );
 };
 

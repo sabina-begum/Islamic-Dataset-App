@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Security Headers Test</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background: #f5f5f5;
+      }
+      .header {
+        background: #333;
+        color: white;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+      }
+      .test-section {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .success {
+        color: #28a745;
+      }
+      .error {
+        color: #dc3545;
+      }
+      .warning {
+        color: #ffc107;
+      }
+      button {
+        background: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        margin: 5px;
+      }
+      button:hover {
+        background: #0056b3;
+      }
+      #results {
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <h1>🔒 Security Headers Test</h1>
+      <p>Test your security headers configuration</p>
+    </div>
+
+    <div class="test-section">
+      <h2>Test Security Headers</h2>
+      <p>Click the button below to test your security headers:</p>
+      <button onclick="testHeaders()">Test Headers</button>
+      <button onclick="testCSP()">Test CSP</button>
+      <button onclick="testXFrame()">Test X-Frame-Options</button>
+    </div>
+
+    <div id="results"></div>
+
+    <script>
+      async function testHeaders() {
+        const resultsDiv = document.getElementById("results");
+        resultsDiv.innerHTML = "<h3>Testing Security Headers...</h3>";
+
+        try {
+          const response = await fetch(window.location.href);
+          const headers = response.headers;
+
+          const securityHeaders = {
+            "Content-Security-Policy": headers.get("content-security-policy"),
+            "X-Frame-Options": headers.get("x-frame-options"),
+            "X-Content-Type-Options": headers.get("x-content-type-options"),
+            "Referrer-Policy": headers.get("referrer-policy"),
+            "Permissions-Policy": headers.get("permissions-policy"),
+            "Strict-Transport-Security": headers.get(
+              "strict-transport-security"
+            ),
+            "X-XSS-Protection": headers.get("x-xss-protection"),
+            "X-Download-Options": headers.get("x-download-options"),
+            "X-Permitted-Cross-Domain-Policies": headers.get(
+              "x-permitted-cross-domain-policies"
+            ),
+            "Cross-Origin-Embedder-Policy": headers.get(
+              "cross-origin-embedder-policy"
+            ),
+            "Cross-Origin-Opener-Policy": headers.get(
+              "cross-origin-opener-policy"
+            ),
+            "Cross-Origin-Resource-Policy": headers.get(
+              "cross-origin-resource-policy"
+            ),
+            "X-DNS-Prefetch-Control": headers.get("x-dns-prefetch-control"),
+          };
+
+          let html = "<h3>Security Headers Analysis:</h3>";
+          let score = 0;
+          let total = 0;
+
+          for (const [header, value] of Object.entries(securityHeaders)) {
+            total++;
+            if (value) {
+              score++;
+              html += `<p class="success">✅ ${header}: ${value}</p>`;
+            } else {
+              html += `<p class="error">❌ ${header}: MISSING</p>`;
+            }
+          }
+
+          const percentage = Math.round((score / total) * 100);
+          let grade = "F";
+
+          if (percentage >= 90) grade = "A+";
+          else if (percentage >= 80) grade = "A";
+          else if (percentage >= 70) grade = "B";
+          else if (percentage >= 60) grade = "C";
+          else if (percentage >= 50) grade = "D";
+
+          html += `<h3>🎯 Score: ${score}/${total} (${percentage}%)</h3>`;
+          html += `<h3>🏆 Grade: ${grade}</h3>`;
+
+          if (grade === "A+") {
+            html +=
+              '<p class="success">🎉 Excellent! Your security headers are properly configured!</p>';
+          } else {
+            html +=
+              '<p class="warning">⚠️ Some security headers are missing. Check your _headers file.</p>';
+          }
+
+          resultsDiv.innerHTML = html;
+        } catch (error) {
+          // Escape HTML characters to prevent XSS
+          const escapedMessage = error.message
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#x27;");
+          resultsDiv.innerHTML = `<p class="error">❌ Error testing headers: ${escapedMessage}</p>`;
+        }
+      }
+
+      function testCSP() {
+        const resultsDiv = document.getElementById("results");
+        resultsDiv.innerHTML = "<h3>Testing Content Security Policy...</h3>";
+
+        // Try to inject a script (should be blocked by CSP)
+        try {
+          eval('alert("CSP Test - This should be blocked")');
+          resultsDiv.innerHTML +=
+            '<p class="error">❌ CSP is not working - script execution allowed</p>';
+        } catch (e) {
+          resultsDiv.innerHTML +=
+            '<p class="success">✅ CSP is working - script execution blocked</p>';
+        }
+      }
+
+      function testXFrame() {
+        const resultsDiv = document.getElementById("results");
+        resultsDiv.innerHTML = "<h3>Testing X-Frame-Options...</h3>";
+
+        // Try to create an iframe (should be blocked by X-Frame-Options)
+        try {
+          const iframe = document.createElement("iframe");
+          iframe.src = window.location.href;
+          iframe.style.display = "none";
+          document.body.appendChild(iframe);
+
+          setTimeout(() => {
+            if (iframe.contentWindow) {
+              resultsDiv.innerHTML +=
+                '<p class="error">❌ X-Frame-Options is not working - iframe allowed</p>';
+            } else {
+              resultsDiv.innerHTML +=
+                '<p class="success">✅ X-Frame-Options is working - iframe blocked</p>';
+            }
+            document.body.removeChild(iframe);
+          }, 1000);
+        } catch (e) {
+          resultsDiv.innerHTML +=
+            '<p class="success">✅ X-Frame-Options is working - iframe blocked</p>';
+        }
+      }
+    </script>
+  </body>
+</html>

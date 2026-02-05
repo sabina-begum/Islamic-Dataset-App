@@ -1,21 +1,31 @@
-import React, { useEffect, useState, useRef } from "react";
-import { AdvancedSearchDashboard } from "./features/search/AdvancedSearchDashboard";
-import { ChartsDashboard } from "./features/charts/ChartsDashboard";
+import React, { useEffect, useState, useRef, Suspense } from "react";
+import {
+  LazyAdvancedSearchDashboard,
+  LazyChartsDashboard,
+  LazyQuranDashboard,
+  LazyHadithDashboard,
+} from "./lazy";
+import {
+  SearchLoadingFallback,
+  ChartLoadingFallback,
+  LazyLoadingFallback,
+} from "./common/LazyLoadingFallback";
 import { DataCard } from "./features/datacard/DataCard";
 import PaginationButton from "./common/PaginationButton";
 import { useFavorites } from "../hooks/useFavorites";
 import { useQuranData } from "../hooks/useQuranData";
 import { useHadithData } from "../hooks/useHadithData";
+import { useSanitizedData } from "../hooks/useSanitizedData";
 import type { IslamicData, IslamicDataFilters } from "../types/Types";
 import type { FavoriteItem } from "../hooks/useFavorites";
 import type { Dispatch, SetStateAction } from "react";
 import Masonry from "react-masonry-css";
-import { QuranDashboard } from "./features/qurancard/QuranDashboard";
-import { HadithDashboard } from "./features/hadithcard/HadithDashboard";
+
 import { scrollToTop } from "../utils/scrollUtils";
 import { HomePageStats } from "./home/HomePageStats";
 import { HomePageTabs } from "./home/HomePageTabs";
 import { HomePageHeader } from "./home/HomePageHeader";
+// import { DailySelection } from "./home/DailySelection";
 import { DataLoadingState } from "./common/LoadingState";
 import { useLanguage } from "../hooks/useContext";
 
@@ -62,6 +72,9 @@ export default function HomePage({
   const { allData: quranData } = useQuranData(); // Use allData for full Quran dataset
   const { hadithData } = useHadithData();
 
+  // Use sanitized data for display
+  const sanitizedPaginatedCards = useSanitizedData(paginatedCards);
+
   // Add loading state tracking
   const [isDataLoading, setIsDataLoading] = useState(true);
 
@@ -87,16 +100,13 @@ export default function HomePage({
       setToast(`Filtered by ${category} category`);
     };
 
-    window.addEventListener(
-      "filterByCategory",
-      handleCategoryFilter as EventListener
-    );
+    const onCategoryFilter = (e: Event) =>
+      handleCategoryFilter(e as CustomEvent);
+
+    window.addEventListener("filterByCategory", onCategoryFilter);
 
     return () => {
-      window.removeEventListener(
-        "filterByCategory",
-        handleCategoryFilter as EventListener
-      );
+      window.removeEventListener("filterByCategory", onCategoryFilter);
     };
   }, [setFilters, setActiveTab, setCurrentPage, setToast]);
 
@@ -236,9 +246,33 @@ export default function HomePage({
 
           {/* Tab Content */}
           <div className="p-4 sm:p-6">
-            {activeTab === "all" && (
-              <div ref={cardsListRef}>
+            {/* Show main data view by default when no tab is selected */}
+            {(!activeTab || activeTab === "all") && (
+              <div ref={cardsListRef} className="animate-fade-in">
                 {/* Filters and Export */}
+                <div className="space-y-4 mb-6">
+                  <div className="flex-1">
+                    <h2 className="text-2xl font-bold text-green-700 dark:text-green-400 mb-2">
+                      Reflections
+                    </h2>
+                    <p className="text-stone-600 dark:text-stone-400 max-w-2xl leading-relaxed">
+                      <em>
+                        {" "}
+                        "Read! In the name of your Lord who created. He created
+                        man from a clot. Read! And your Lord is the Most
+                        Generous, Who taught by the pen. He taught man that
+                        which he knew not."{" "}
+                      </em>
+                      <br />
+                      (Quran 96:1-5)
+                      <br />
+                      <br />
+                      <em> "Do they not contemplate within themselves?" </em>
+                      <br />
+                      (Quran 30:8)
+                    </p>
+                  </div>
+                </div>
                 <div className="mb-6 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
                   <div className="flex flex-col sm:flex-row gap-2">
                     <input
@@ -287,12 +321,12 @@ export default function HomePage({
                   className="flex w-full"
                   columnClassName="bg-clip-padding pr-2 sm:pr-4"
                 >
-                  {paginatedCards.map((card) => (
+                  {sanitizedPaginatedCards.map((card) => (
                     <div key={`${card.type}-${card.title}`} className="mb-4">
                       <DataCard
-                        card={card}
+                        card={card as IslamicData}
                         onFavorite={handleFavorite}
-                        isFavorite={isFavorite(card)}
+                        isFavorite={isFavorite(card as IslamicData)}
                       />
                     </div>
                   ))}
@@ -418,38 +452,50 @@ export default function HomePage({
             )}
 
             {activeTab === "search" && (
-              <div ref={searchContentRef}>
-                <AdvancedSearchDashboard
-                  data={cards}
-                  quranData={quranData}
-                  hadithData={hadithData}
-                  onFavorite={handleFavorite}
-                  isFavorite={isFavorite}
-                />
+              <div ref={searchContentRef} className="animate-fade-in">
+                <Suspense fallback={<SearchLoadingFallback />}>
+                  <LazyAdvancedSearchDashboard
+                    data={cards}
+                    quranData={quranData}
+                    hadithData={hadithData}
+                    onFavorite={handleFavorite}
+                    isFavorite={isFavorite}
+                  />
+                </Suspense>
               </div>
             )}
 
             {activeTab === "charts" && (
-              <div ref={chartsContentRef}>
-                <ChartsDashboard data={cards} />
+              <div ref={chartsContentRef} className="animate-fade-in">
+                <Suspense fallback={<ChartLoadingFallback />}>
+                  <LazyChartsDashboard data={cards} />
+                </Suspense>
               </div>
             )}
 
             {activeTab === "quran" && (
-              <div ref={quranContentRef}>
-                <QuranDashboard
-                  onFavorite={handleFavorite}
-                  isFavorite={isFavorite}
-                />
+              <div ref={quranContentRef} className="animate-fade-in">
+                <Suspense
+                  fallback={<LazyLoadingFallback message="Loading Quran..." />}
+                >
+                  <LazyQuranDashboard
+                    onFavorite={handleFavorite}
+                    isFavorite={isFavorite}
+                  />
+                </Suspense>
               </div>
             )}
 
             {activeTab === "hadith" && (
-              <div ref={hadithContentRef}>
-                <HadithDashboard
-                  onFavorite={handleFavorite}
-                  isFavorite={isFavorite}
-                />
+              <div ref={hadithContentRef} className="animate-fade-in">
+                <Suspense
+                  fallback={<LazyLoadingFallback message="Loading Hadith..." />}
+                >
+                  <LazyHadithDashboard
+                    onFavorite={handleFavorite}
+                    isFavorite={isFavorite}
+                  />
+                </Suspense>
               </div>
             )}
           </div>

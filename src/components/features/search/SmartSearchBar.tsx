@@ -39,7 +39,7 @@ export const SmartSearchBar: React.FC<SmartSearchBarProps> = ({
   const suggestionsRef = useRef<HTMLDivElement>(null);
 
   // Debounced search function
-  const timeoutRef = useRef<NodeJS.Timeout>();
+  const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
   const debouncedSearch = (searchQuery: string) => {
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
@@ -70,23 +70,6 @@ export const SmartSearchBar: React.FC<SmartSearchBarProps> = ({
           score,
           type: card.type || "unknown",
           source: "title",
-        });
-      }
-    });
-
-    // Search in descriptions
-    data.forEach((card) => {
-      if (card.description?.toLowerCase().includes(query)) {
-        const words = card.description.split(" ");
-        words.forEach((word) => {
-          if (word.toLowerCase().includes(query) && word.length > 2) {
-            const score = word.toLowerCase().startsWith(query) ? 30 : 20;
-            suggestions.set(word, {
-              score,
-              type: card.type || "unknown",
-              source: "description",
-            });
-          }
         });
       }
     });
